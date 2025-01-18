@@ -1,19 +1,8 @@
-# Web3 NestJS + GraphQL Template
+# Arbor Server
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository. This also includes the added bells and whistles:
-
-- TypeORM for working with a SQL database
-- GraphQL support
-- Viem with custom scalars for Ethereum addresses and hashes
-- A pretty logger
-- A generic pagination and sorting service that can be applied to any entity
-- Base entities setup using UUID strings as IDs
-- A decimal transformer
-- An optional but non-null decorator
-- TSConfig/ESLint/Prettier wrangling
-- Husky pre-commit hooks and conventional commit messages
+This is the backend server built with [NestJS](https://nestjs.com) powering the Arbor Protocol's [dApp UI](https://arbor.audio).
 
 ## Installation
 
@@ -42,7 +31,7 @@ $ pnpm lint
 $ pnpm format
 ```
 
-## Test
+## Running tests
 
 ```bash
 # unit tests
