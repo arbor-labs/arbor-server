@@ -23,6 +23,8 @@ pnpm install
 
 ## Running the app
 
+First, copy `.env.example -> .env`.
+
 ```bash
 # development mode
 $ pnpm run dev
