@@ -4,12 +4,28 @@
 
 type Account {
   address: EthereumAddress!
+  createdAt: DateTime!
+  id: ID!
+  updatedAt: DateTime!
 }
+
+input CreateAccountInput {
+  address: EthereumAddress!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 """
 A string whose value conforms to the standard Ethereum address format as specified in EIP-150 Revision (212): http://gavwood.com/paper.pdf.
 """
 scalar EthereumAddress @specifiedBy(url: "http://gavwood.com/paper.pdf")
+
+type Mutation {
+  createAccount(createAccountInput: CreateAccountInput!): Account!
+}
 
 type PaginatedAccounts {
   items: [Account!]

@@ -1,10 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 import { EthereumAddress } from 'src/common/scalars/EthereumAddress'
-import { Paginated } from 'src/common/types'
+import { BaseType, Paginated } from 'src/common/types'
 import { Address } from 'viem'
 
 @ObjectType('Account')
-export class AccountType {
+export class AccountType extends BaseType {
 	@Field(() => EthereumAddress)
 	address: Address
 }

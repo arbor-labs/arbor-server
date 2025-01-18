@@ -7,6 +7,7 @@ import { AccountEntity } from 'src/schema/entities'
 import { Repository } from 'typeorm'
 
 import type { PaginatedAccountsType } from './account.type'
+import type { CreateAccountInput } from './dtos/create-account.input'
 
 @Injectable()
 export class AccountService {
@@ -14,6 +15,11 @@ export class AccountService {
 		@InjectRepository(AccountEntity)
 		private accountRepository: Repository<AccountEntity>,
 	) {}
+
+	async createAccount(input: CreateAccountInput): Promise<AccountEntity> {
+		const account = this.accountRepository.create(input)
+		return await this.accountRepository.save(account)
+	}
 
 	async getAccounts(sort?: SortInput): Promise<PaginatedAccountsType> {
 		const qb = this.accountRepository.createQueryBuilder('account')
