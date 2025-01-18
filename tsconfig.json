@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"baseUrl": "./",
+		"declaration": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"incremental": true,
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"noFallthroughCasesInSwitch": false,
+		"noImplicitAny": false,
+		"outDir": "./dist",
+		"removeComments": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"strictBindCallApply": false,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": false,
+		"target": "ES2021"
+	}
+}
