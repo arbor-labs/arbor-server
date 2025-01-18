@@ -20,6 +20,9 @@
 		"strictBindCallApply": false,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": false,
-		"target": "ES2021"
+		"target": "ES2021",
+		"paths": {
+			"@/*": ["src/*"]
+		}
 	}
 }

@@ -8,6 +8,7 @@ import * as Joi from 'joi'
 import { join } from 'path'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
+import { AccountModule } from './account/account.module'
 import { LoggerModule } from './logger/logger.module'
 import * as entities from './schema/entities'
 
@@ -27,6 +28,7 @@ import * as entities from './schema/entities'
 			driver: ApolloDriver,
 			autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
 			sortSchema: true,
+			playground: true,
 		}),
 		// Database
 		TypeOrmModule.forRootAsync({
@@ -36,13 +38,13 @@ import * as entities from './schema/entities'
 				url: configService.get('DB_URL') ?? 'MISSING_DB_URL',
 				entities: Object.values(entities),
 				migrations: [join(process.cwd(), 'db/migrations/*.js')],
-				synchronize: false,
+				synchronize: true,
 				logging: true,
 			}),
 			inject: [ConfigService],
 		}),
 		// Other
-		// ...
+		AccountModule,
 	],
 })
 export class AppModule {}

@@ -1,0 +1,35 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Account {
+  address: EthereumAddress!
+}
+
+"""
+A string whose value conforms to the standard Ethereum address format as specified in EIP-150 Revision (212): http://gavwood.com/paper.pdf.
+"""
+scalar EthereumAddress @specifiedBy(url: "http://gavwood.com/paper.pdf")
+
+type PaginatedAccounts {
+  items: [Account!]
+  meta: PaginatedMeta!
+}
+
+type PaginatedMeta {
+  currentPage: Int!
+  itemCount: Int!
+  itemType: String!
+  itemsPerPage: Int!
+  totalItems: Int!
+  totalPages: Int!
+}
+
+type Query {
+  accounts(sort: SortInput): PaginatedAccounts!
+}
+
+input SortInput {
+  asc: Boolean!
+  key: String!
+}

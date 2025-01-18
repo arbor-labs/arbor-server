@@ -1,3 +1,5 @@
+const { override } = require("joi");
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -41,6 +43,7 @@ module.exports = {
 		'@typescript-eslint/no-extraneous-class': 'off',
 		'@typescript-eslint/no-floating-promises': 'off',
 		'@typescript-eslint/no-unsafe-argument': 'off',
+		'@typescript-eslint/no-unsafe-assignment': 'off',
 		'@typescript-eslint/no-unsafe-call': 'off',
 		'@typescript-eslint/no-unsafe-member-access': 'off',
 		'@typescript-eslint/no-unsafe-return': 'off',
@@ -64,4 +67,12 @@ module.exports = {
 		'simple-import-sort/imports': 'error',
 		'simple-import-sort/exports': 'warn',
   },
+	overrides: [
+		{
+			files: ['*.spec.ts'],
+			rules: {
+				'@typescript-eslint/unbound-method': 'off',
+			},
+		},
+	],
 };
