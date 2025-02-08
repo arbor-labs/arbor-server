@@ -30,8 +30,10 @@ async function bootstrap() {
 				// Production
 				'https://arbor-ui.vercel.app',
 				'https://arbor.audio',
+				'https://api.arbor.audio'
 			]
 			// Vercel Webapp builds
+			// TODO: update in Vercel
 			const vercelWebappRegex = /^https:\/\/arbor-*-dco\.vercel\.app$/
 
 			if (allowedOrigins.includes(origin) || vercelWebappRegex.test(origin)) {
@@ -45,6 +47,6 @@ async function bootstrap() {
 
 	// Listen for HTTP request
 	await app.listen(PORT)
-	app.get(Logger).log(`Server listening on http://localhost:${PORT}...`)
+	app.get(Logger).log(`Server listening on port ${PORT}...`)
 }
 bootstrap()
