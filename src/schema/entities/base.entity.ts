@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { BeforeInsert, CreateDateColumn, PrimaryColumn, Unique, UpdateDateColumn } from 'typeorm'
 
 @Unique(['id'])
