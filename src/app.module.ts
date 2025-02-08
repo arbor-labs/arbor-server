@@ -30,6 +30,7 @@ import * as entities from './schema/entities'
 			autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
 			sortSchema: true,
 			playground: true,
+			introspection: true,
 		}),
 		// Database
 		TypeOrmModule.forRootAsync({
