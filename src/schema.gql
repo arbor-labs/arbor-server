@@ -4,13 +4,30 @@
 
 type Account {
   address: EthereumAddress!
+  avatarUrl: String
+  collaboratedProjects: [Project!]!
   createdAt: DateTime!
+  createdProjects: [Project!]!
+  displayName: String
   id: ID!
+  onboardingSignature: EthereumSignature!
+  stems: [Stem!]!
   updatedAt: DateTime!
+  voterIdentities: [SemaphoreIdentity!]!
 }
 
 input CreateAccountInput {
   address: EthereumAddress!
+  signature: EthereumSignature!
+}
+
+input CreateProjectInput {
+  bpm: Int!
+  createdBy: EthereumAddress!
+  description: String!
+  name: String!
+  tags: [String!] = []
+  trackLimit: Int!
 }
 
 """
@@ -23,16 +40,28 @@ A string whose value conforms to the standard Ethereum address format as specifi
 """
 scalar EthereumAddress @specifiedBy(url: "http://gavwood.com/paper.pdf")
 
+"""
+A string whose value conforms to the standard Ethereum signature format as specified in EIP-150 Revision (212): http://gavwood.com/paper.pdf
+"""
+scalar EthereumSignature @specifiedBy(url: "http://gavwood.com/paper.pdf")
+
 type Mutation {
   createAccount(createAccountInput: CreateAccountInput!): Account!
+  createProject(createProjectInput: CreateProjectInput!): Project!
+  findOrCreateAccount(createAccountInput: CreateAccountInput!): Account!
 }
 
 type PaginatedAccounts {
   items: [Account!]
-  meta: PaginatedMeta!
+  meta: PaginationMeta!
 }
 
-type PaginatedMeta {
+type PaginatedProjects {
+  items: [Project!]
+  meta: PaginationMeta!
+}
+
+type PaginationMeta {
   currentPage: Int!
   itemCount: Int!
   itemType: String!
@@ -41,11 +70,82 @@ type PaginatedMeta {
   totalPages: Int!
 }
 
+type Project {
+  bpm: Int!
+  collaborators: [Account!]!
+  createdAt: DateTime!
+  createdBy: Account!
+  description: String!
+  id: ID!
+  name: String!
+  queue: ProjectQueue!
+  stems: [Stem!]!
+  tags: [String!]!
+  trackLimit: Int!
+  updatedAt: DateTime!
+  votingGroup: VotingGroup!
+}
+
+type ProjectQueue {
+  createdAt: DateTime!
+  id: ID!
+  stems: [QueuedStem!]!
+  updatedAt: DateTime!
+}
+
 type Query {
+  account(address: EthereumAddress!): Account
   accounts(sort: SortInput): PaginatedAccounts!
+  projects(sort: SortInput): PaginatedProjects!
+}
+
+type QueuedStem {
+  createdAt: DateTime!
+  id: ID!
+  queue: ProjectQueue!
+  stem: Stem!
+  updatedAt: DateTime!
+  votes: Int!
+}
+
+type SemaphoreIdentity {
+  account: Account!
+  commitment: String!
+  createdAt: DateTime!
+  group: VotingGroup!
+  id: ID!
+  nullifier: String!
+  trapdoor: String!
+  updatedAt: DateTime!
 }
 
 input SortInput {
   asc: Boolean!
   key: String!
+}
+
+type Stem {
+  audioHref: String!
+  audioUrl: String!
+  bpm: Int!
+  createdAt: DateTime!
+  createdBy: Account!
+  description: String!
+  filename: String!
+  filesize: Int!
+  filetype: String!
+  id: ID!
+  metadataUrl: String!
+  name: String!
+  projectsAddedTo: [Project!]!
+  tags: [String!]!
+  type: String!
+  updatedAt: DateTime!
+}
+
+type VotingGroup {
+  createdAt: DateTime!
+  id: ID!
+  members: [SemaphoreIdentity!]!
+  updatedAt: DateTime!
 }

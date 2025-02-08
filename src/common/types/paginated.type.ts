@@ -2,7 +2,7 @@ import type { Type } from '@nestjs/common'
 import { Field, Int, ObjectType } from '@nestjs/graphql'
 
 // Interfaces
-export interface IPaginatedMeta {
+export interface IPaginationMeta {
 	totalItems: number
 	itemCount: number
 	itemsPerPage: number
@@ -13,12 +13,12 @@ export interface IPaginatedMeta {
 
 export interface IPaginatedType<T> {
 	items: T[]
-	meta: IPaginatedMeta
+	meta: IPaginationMeta
 }
 
 // The GraphQL Type
-@ObjectType('PaginatedMeta')
-export abstract class PaginatedMeta implements IPaginatedMeta {
+@ObjectType('PaginationMeta')
+export abstract class PaginationMeta implements IPaginationMeta {
 	@Field(() => Int)
 	currentPage: number
 
@@ -45,8 +45,8 @@ export function Paginated<T>(classRef: Type<T>): Type<IPaginatedType<T>> {
 		@Field(() => [classRef], { nullable: true })
 		items: T[]
 
-		@Field(() => PaginatedMeta)
-		meta: PaginatedMeta
+		@Field(() => PaginationMeta)
+		meta: PaginationMeta
 	}
 
 	return PaginatedType as Type<IPaginatedType<T>>

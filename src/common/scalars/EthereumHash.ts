@@ -5,6 +5,7 @@ const specifiedByURL = 'http://gavwood.com/paper.pdf'
 
 const validate = (value: unknown) => {
 	if (typeof value !== 'string') throw new TypeError(`Value is not string: ${value as string}`)
+
 	if (!ETHEREUM_HASH_REGEX.test(value)) throw new TypeError(`Value is not a valid Ethereum hash: ${value}`)
 	return value
 }

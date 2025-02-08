@@ -2,7 +2,7 @@ import type { Type } from '@nestjs/common'
 import { type SelectQueryBuilder } from 'typeorm'
 
 import { PAGINATION_DEFAULTS } from './constants'
-import type { IPaginatedMeta, IPaginatedType } from './types/paginated.type'
+import type { IPaginatedType, IPaginationMeta } from './types/paginated.type'
 
 export interface GetPaginatedItemsOptions<T> {
 	classRef: Type<T>
@@ -30,7 +30,7 @@ export class PaginationService {
 			.skip((page - 1) * limit)
 			.take(limit)
 			.getMany()
-		const meta: IPaginatedMeta = {
+		const meta: IPaginationMeta = {
 			currentPage: page,
 			totalPages: Math.ceil(totalItems / limit),
 			itemsPerPage: limit,

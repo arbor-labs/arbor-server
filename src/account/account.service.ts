@@ -4,10 +4,11 @@ import type { SortInput } from 'src/common/dtos/sort.input'
 import { PaginationService } from 'src/common/pagination.service'
 import { SortingService } from 'src/common/sorting.service'
 import { AccountEntity } from 'src/schema/entities'
-import { Repository } from 'typeorm'
+import { EntityNotFoundError, Repository } from 'typeorm'
+import { type Address, getAddress } from 'viem'
 
 import type { PaginatedAccountsType } from './account.type'
-import type { CreateAccountInput } from './dtos/create-account.input'
+import type { CreateAccountInput } from './dto/create-account.input'
 
 @Injectable()
 export class AccountService {
@@ -16,12 +17,17 @@ export class AccountService {
 		private accountRepository: Repository<AccountEntity>,
 	) {}
 
-	async createAccount(input: CreateAccountInput): Promise<AccountEntity> {
-		const account = this.accountRepository.create(input)
+	async createAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {
+		// throw new BadRequestException('Creating account: Not implemented')
+		const checksumAddress = getAddress(createAccountInput.address)
+		const account = this.accountRepository.create({
+			onboardingSignature: createAccountInput.signature,
+			address: checksumAddress,
+		})
 		return await this.accountRepository.save(account)
 	}
 
-	async getAccounts(sort?: SortInput): Promise<PaginatedAccountsType> {
+	async findAll(sort?: SortInput | undefined): Promise<PaginatedAccountsType> {
 		const qb = this.accountRepository.createQueryBuilder('account')
 
 		// Apply sorting
@@ -34,5 +40,23 @@ export class AccountService {
 		})
 
 		return paginatedItems
+	}
+
+	async findAccountByAddress(address: Address): Promise<AccountEntity> {
+		// throw new BadRequestException('Finding account: Not implemented')
+		const checksumAddress = getAddress(address)
+		const account = await this.accountRepository.findOneBy({ address: checksumAddress })
+		if (!account) throw new EntityNotFoundError(AccountEntity, { address })
+		return account
+	}
+
+	async findOrCreateAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {
+		const checksumAddress = getAddress(createAccountInput.address)
+		const account = await this.accountRepository.findOneBy({ address: checksumAddress })
+
+		if (account) return account
+
+		const newAccount = await this.createAccount(createAccountInput)
+		return newAccount
 	}
 }

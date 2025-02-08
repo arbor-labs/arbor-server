@@ -10,6 +10,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 import { AccountModule } from './account/account.module'
 import { LoggerModule } from './logger/logger.module'
+import { ProjectModule } from './project/project.module'
 import * as entities from './schema/entities'
 
 @Module({
@@ -45,6 +46,7 @@ import * as entities from './schema/entities'
 		}),
 		// Other
 		AccountModule,
+		ProjectModule,
 	],
 })
 export class AppModule {}
