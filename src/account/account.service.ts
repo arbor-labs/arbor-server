@@ -53,9 +53,7 @@ export class AccountService {
 	async findOrCreateAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {
 		const checksumAddress = getAddress(createAccountInput.address)
 		const account = await this.accountRepository.findOneBy({ address: checksumAddress })
-
 		if (account) return account
-
 		const newAccount = await this.createAccount(createAccountInput)
 		return newAccount
 	}
