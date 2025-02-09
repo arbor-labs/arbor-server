@@ -26,10 +26,10 @@ export class ProjectType extends BaseType {
 	@Field(() => AccountType)
 	createdBy: AccountType
 
-	@Field(() => [AccountType])
+	@Field(() => [AccountType], { nullable: true })
 	collaborators: AccountType[]
 
-	@Field(() => [StemType])
+	@Field(() => [StemType], { nullable: true })
 	stems: StemType[]
 
 	@Field(() => ProjectQueueType)

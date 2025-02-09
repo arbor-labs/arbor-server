@@ -6,7 +6,6 @@ import { EFileType } from '../enums/file-type.enum'
 import { EStemType } from '../enums/stem-type.enum'
 import { AccountEntity } from './account.entity'
 import { BaseEntity } from './base.entity'
-import { SongEntity } from './song.entity'
 
 @Entity('stems')
 @Unique('UniqueStemName', ['name'])
@@ -51,6 +50,6 @@ export class StemEntity extends BaseEntity<StemEntity> {
 	@ManyToMany(() => ProjectEntity, entity => entity.stems)
 	projectsAddedTo: ProjectEntity[]
 
-	@ManyToMany(() => SongEntity, entity => entity.stems)
-	songsIncludedIn: SongEntity[]
+	// @ManyToMany(() => SongEntity, entity => entity.stems)
+	// songsIncludedIn: SongEntity[]
 }

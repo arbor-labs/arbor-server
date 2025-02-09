@@ -40,7 +40,8 @@ import * as entities from './schema/entities'
 				url: configService.get('DB_URL') ?? 'MISSING_DB_URL',
 				entities: Object.values(entities),
 				migrations: [join(process.cwd(), 'db/migrations/*.js')],
-				synchronize: process.env.NODE_ENV === 'development', // TODO: figure out migrations for production
+				// TODO: figure out migrations for production
+				synchronize: true, // process.env.NODE_ENV !== 'production',
 				logging: true,
 			}),
 			inject: [ConfigService],

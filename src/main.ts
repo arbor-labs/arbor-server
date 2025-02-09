@@ -30,7 +30,7 @@ async function bootstrap() {
 				// Production
 				'https://arbor-ui.vercel.app',
 				'https://arbor.audio',
-				'https://api.arbor.audio'
+				'https://api.arbor.audio',
 			]
 			// Vercel Webapp builds
 			// TODO: update in Vercel
