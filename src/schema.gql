@@ -72,14 +72,14 @@ type PaginationMeta {
 
 type Project {
   bpm: Int!
-  collaborators: [Account!]!
+  collaborators: [Account!]
   createdAt: DateTime!
   createdBy: Account!
   description: String!
   id: ID!
   name: String!
   queue: ProjectQueue!
-  stems: [Stem!]!
+  stems: [Stem!]
   tags: [String!]!
   trackLimit: Int!
   updatedAt: DateTime!

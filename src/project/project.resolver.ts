@@ -12,9 +12,7 @@ export class ProjectResolver {
 
 	@Mutation(() => ProjectType)
 	async createProject(@Args('createProjectInput') createProjectInput: CreateProjectInput) {
-		const projectRes = await this.projectService.create(createProjectInput)
-		console.log({ projectRes })
-		return projectRes
+		return await this.projectService.create(createProjectInput)
 	}
 
 	@Query(() => PaginatedProjectsType)

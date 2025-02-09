@@ -1,20 +1,8 @@
-import {
-	Column,
-	Entity,
-	Index,
-	JoinColumn,
-	JoinTable,
-	ManyToMany,
-	ManyToOne,
-	OneToMany,
-	OneToOne,
-	Unique,
-} from 'typeorm'
+import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, Unique } from 'typeorm'
 
 import { AccountEntity } from './account.entity'
 import { BaseEntity } from './base.entity'
 import { ProjectQueueEntity } from './project-queue.entity'
-import { SongEntity } from './song.entity'
 import { StemEntity } from './stem.entity'
 import { VotingGroupEntity } from './voting-group.entity'
 
@@ -37,24 +25,26 @@ export class ProjectEntity extends BaseEntity<ProjectEntity> {
 	@Column()
 	trackLimit: number
 
-	@ManyToOne(() => AccountEntity, entity => entity.createdProjects, { cascade: true })
+	@ManyToOne(() => AccountEntity)
 	createdBy: AccountEntity
 
-	@ManyToMany(() => AccountEntity, entity => entity.collaboratedProjects)
+	@JoinTable({ name: 'project_collaborators' })
+	@ManyToMany(() => AccountEntity, entity => entity.collaboratedProjects, { cascade: true })
 	collaborators: AccountEntity[]
 
 	@JoinTable({ name: 'project_stems' })
-	@ManyToMany(() => StemEntity, entity => entity.projectsAddedTo)
+	@ManyToMany(() => StemEntity, entity => entity.projectsAddedTo, { cascade: true })
 	stems: StemEntity[]
 
 	@JoinColumn()
 	@OneToOne(() => ProjectQueueEntity, { cascade: true })
 	queue: ProjectQueueEntity
 
-	@OneToMany(() => SongEntity, entity => entity.project, { cascade: true })
-	songsMinted: SongEntity[]
-
 	@JoinColumn()
 	@OneToOne(() => VotingGroupEntity, { cascade: true })
 	votingGroup: VotingGroupEntity
+
+	// @Column({ type: 'simple-array', default: [] })
+	// @OneToMany(() => SongEntity, entity => entity.project, { cascade: true })
+	// songsMinted: SongEntity[]
 }

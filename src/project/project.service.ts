@@ -41,10 +41,8 @@ export class ProjectService {
 		const project = this.projectRepository.create({ ...createProjectInput, createdBy: account })
 		project.queue = projectQueue
 		project.votingGroup = votingGroup
-		project.collaborators = []
-		project.stems = []
 
-		// 4. Return the project entity - cascades for account, project queue, and voting group entities
+		// 4. Return the project entity - cascades for createdBy, queue, and votingGroup
 		return await this.projectRepository.save(project)
 	}
 
