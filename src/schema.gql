@@ -96,6 +96,7 @@ type ProjectQueue {
 type Query {
   account(address: EthereumAddress!): Account
   accounts(sort: SortInput): PaginatedAccounts!
+  project(id: String!): Project!
   projects(sort: SortInput): PaginatedProjects!
 }
 

@@ -65,4 +65,15 @@ export class ProjectService {
 
 		return paginatedItems
 	}
+
+	async findProjectById(id: string): Promise<ProjectEntity> {
+		return this.projectRepository
+			.createQueryBuilder('project')
+			.where('project.id = :id', { id })
+			.leftJoinAndSelect('project.createdBy', 'createdBy')
+			.leftJoinAndSelect('project.collaborators', 'collaborators')
+			.leftJoinAndSelect('project.stems', 'stems')
+			.leftJoinAndSelect('project.queue', 'queue')
+			.getOneOrFail()
+	}
 }
