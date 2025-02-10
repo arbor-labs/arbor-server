@@ -29,6 +29,7 @@ async function bootstrap() {
 				'http://localhost:5280',
 				// Production
 				'https://arbor-ui.vercel.app',
+				'https://arbor.up.railway.app',
 				'https://arbor.audio',
 				'https://api.arbor.audio',
 			]
