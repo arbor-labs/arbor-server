@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import type { SortInput } from 'src/common/dtos/sort.input'
-import { PaginationService } from 'src/common/pagination.service'
-import { SortingService } from 'src/common/sorting.service'
-import { AccountEntity } from 'src/schema/entities'
 import { EntityNotFoundError, Repository } from 'typeorm'
 import { type Address, getAddress } from 'viem'
 
-import type { PaginatedAccountsType } from './account.type'
+import type { SortInput } from '@/common/dtos/sort.input'
+import { PaginationService } from '@/common/pagination.service'
+import { SortingService } from '@/common/sorting.service'
+import type { PaginatedAccounts } from '@/schema/entities'
+import { AccountEntity } from '@/schema/entities'
+
 import type { CreateAccountInput } from './dto/create-account.input'
 
 @Injectable()
@@ -27,14 +28,14 @@ export class AccountService {
 		return await this.accountRepository.save(account)
 	}
 
-	async findAll(sort?: SortInput | undefined): Promise<PaginatedAccountsType> {
+	async findAll(sort?: SortInput | undefined): Promise<PaginatedAccounts> {
 		const qb = this.accountRepository.createQueryBuilder('account')
 
 		// Apply sorting
 		if (sort) SortingService.applySorting(sort, qb)
 
 		// Apply pagination
-		const paginatedItems: PaginatedAccountsType = await PaginationService.getPaginatedItems({
+		const paginatedItems = await PaginationService.getPaginatedItems<AccountEntity>({
 			classRef: AccountEntity,
 			qb,
 		})

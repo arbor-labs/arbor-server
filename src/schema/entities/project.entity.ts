@@ -1,5 +1,7 @@
 import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, Unique } from 'typeorm'
 
+import type { IPaginatedType } from '@/common/types'
+
 import { AccountEntity } from './account.entity'
 import { BaseEntity } from './base.entity'
 import { ProjectQueueEntity } from './project-queue.entity'
@@ -48,3 +50,5 @@ export class ProjectEntity extends BaseEntity<ProjectEntity> {
 	// @OneToMany(() => SongEntity, entity => entity.project, { cascade: true })
 	// songsMinted: SongEntity[]
 }
+
+export type PaginatedProjects = IPaginatedType<ProjectEntity>

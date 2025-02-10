@@ -1,10 +1,11 @@
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
-import type { SortInput } from 'src/common/dtos/sort.input'
+
+import type { SortInput } from '@/common/dtos/sort.input'
+import type { PaginatedAccounts } from '@/schema/entities'
 
 import { AccountResolver } from './account.resolver'
 import { AccountService } from './account.service'
-import type { PaginatedAccountsType } from './account.type'
 
 describe('AccountResolver', () => {
 	let resolver: AccountResolver
@@ -34,7 +35,7 @@ describe('AccountResolver', () => {
 	describe('accounts', () => {
 		it('should call accountService.getAccounts with correct parameters', async () => {
 			const sortInput: SortInput = { key: 'address', asc: true }
-			const result: PaginatedAccountsType = {
+			const result: PaginatedAccounts = {
 				items: [],
 				meta: {
 					itemCount: 0,
@@ -46,14 +47,14 @@ describe('AccountResolver', () => {
 				},
 			}
 
-			jest.spyOn(accountService, 'getAccounts').mockResolvedValue(result)
+			jest.spyOn(accountService, 'findAll').mockResolvedValue(result)
 
 			expect(await resolver.accounts(sortInput)).toBe(result)
-			expect(accountService.getAccounts).toHaveBeenCalledWith(sortInput)
+			expect(accountService.findAll).toHaveBeenCalledWith(sortInput)
 		})
 
 		it('should call accountService.getAccounts with no parameters', async () => {
-			const result: PaginatedAccountsType = {
+			const result: PaginatedAccounts = {
 				items: [],
 				meta: {
 					itemCount: 0,
@@ -65,10 +66,10 @@ describe('AccountResolver', () => {
 				},
 			}
 
-			jest.spyOn(accountService, 'getAccounts').mockResolvedValue(result)
+			jest.spyOn(accountService, 'findAll').mockResolvedValue(result)
 
 			expect(await resolver.accounts()).toBe(result)
-			expect(accountService.getAccounts).toHaveBeenCalledWith(undefined)
+			expect(accountService.findAll).toHaveBeenCalledWith(undefined)
 		})
 	})
 })

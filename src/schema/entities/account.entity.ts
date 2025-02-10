@@ -1,6 +1,7 @@
 import { Column, Entity, Index, JoinColumn, ManyToMany, OneToMany, Unique } from 'typeorm'
 import { Address, Hex } from 'viem'
 
+import type { IPaginatedType } from '@/common/types'
 import { ProjectEntity } from '@/schema/entities/project.entity'
 
 import { BaseEntity } from './base.entity'
@@ -44,3 +45,5 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
 	// @OneToMany(() => SongEntity, entity => entity.owner)
 	// collectedSongs: SongEntity[]
 }
+
+export type PaginatedAccounts = IPaginatedType<AccountEntity>

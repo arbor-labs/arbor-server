@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
 
 import { SortInput } from '@/common/dtos/sort.input'
+import type { PaginatedProjects } from '@/schema/entities'
 
 import { CreateProjectInput } from './dto/create-project.input'
 import { ProjectService } from './project.service'
@@ -18,7 +19,7 @@ export class ProjectResolver {
 	@Query(() => PaginatedProjectsType)
 	projects(
 		@Args('sort', { type: () => SortInput, nullable: true }) sort?: SortInput | undefined,
-	): Promise<PaginatedProjectsType> {
+	): Promise<PaginatedProjects> {
 		return this.projectService.findAll(sort)
 	}
 }

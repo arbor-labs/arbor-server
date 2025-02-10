@@ -7,11 +7,10 @@ import { AccountService } from '@/account/account.service'
 import type { SortInput } from '@/common/dtos/sort.input'
 import { PaginationService } from '@/common/pagination.service'
 import { SortingService } from '@/common/sorting.service'
-import type { AccountEntity } from '@/schema/entities'
+import type { AccountEntity, PaginatedProjects } from '@/schema/entities'
 import { ProjectEntity, ProjectQueueEntity, VotingGroupEntity } from '@/schema/entities'
 
 import type { CreateProjectInput } from './dto/create-project.input'
-import type { PaginatedProjectsType } from './project.type'
 
 @Injectable()
 export class ProjectService {
@@ -46,7 +45,7 @@ export class ProjectService {
 		return await this.projectRepository.save(project)
 	}
 
-	async findAll(sort?: SortInput | undefined): Promise<PaginatedProjectsType> {
+	async findAll(sort?: SortInput | undefined): Promise<PaginatedProjects> {
 		const qb = this.projectRepository
 			.createQueryBuilder('project')
 			.leftJoinAndSelect('project.createdBy', 'createdBy')
@@ -59,7 +58,7 @@ export class ProjectService {
 		if (sort) SortingService.applySorting(sort, qb)
 
 		// Apply pagination
-		const paginatedItems: PaginatedProjectsType = await PaginationService.getPaginatedItems({
+		const paginatedItems = await PaginationService.getPaginatedItems({
 			classRef: ProjectEntity,
 			qb,
 		})

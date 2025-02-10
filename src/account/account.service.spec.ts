@@ -1,11 +1,12 @@
 import type { TestingModule } from '@nestjs/testing'
 import { Test } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import type { SortInput } from 'src/common/dtos/sort.input'
-import { PaginationService } from 'src/common/pagination.service'
-import { SortingService } from 'src/common/sorting.service'
-import { AccountEntity } from 'src/schema/entities'
 import { Repository } from 'typeorm'
+
+import type { SortInput } from '@/common/dtos/sort.input'
+import { PaginationService } from '@/common/pagination.service'
+import { SortingService } from '@/common/sorting.service'
+import { AccountEntity } from '@/schema/entities'
 
 import { AccountService } from './account.service'
 import type { PaginatedAccountsType } from './account.type'
@@ -63,7 +64,7 @@ describe('AccountService', () => {
 			}
 			jest.spyOn(PaginationService, 'getPaginatedItems').mockResolvedValue(paginatedAccounts)
 
-			const result = await service.getAccounts()
+			const result = await service.findAll()
 
 			expect(result).toEqual(paginatedAccounts)
 			expect(PaginationService.getPaginatedItems).toHaveBeenCalled()
@@ -85,7 +86,7 @@ describe('AccountService', () => {
 			jest.spyOn(SortingService, 'applySorting').mockImplementation()
 			jest.spyOn(PaginationService, 'getPaginatedItems').mockResolvedValue(paginatedAccounts)
 
-			const result = await service.getAccounts(sortInput)
+			const result = await service.findAll(sortInput)
 
 			expect(result).toEqual(paginatedAccounts)
 			expect(SortingService.applySorting).toHaveBeenCalledWith(sortInput, repository.createQueryBuilder())

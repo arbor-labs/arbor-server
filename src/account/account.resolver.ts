@@ -3,6 +3,7 @@ import { SortInput } from 'src/common/dtos/sort.input'
 import { Address } from 'viem'
 
 import { EthereumAddress } from '@/common/scalars/EthereumAddress'
+import type { AccountEntity, PaginatedAccounts } from '@/schema/entities'
 
 import { AccountService } from './account.service'
 import { AccountType, PaginatedAccountsType } from './account.type'
@@ -13,19 +14,19 @@ export class AccountResolver {
 	constructor(private readonly accountService: AccountService) {}
 
 	@Mutation(() => AccountType)
-	createAccount(@Args('createAccountInput') createAccountInput: CreateAccountInput): Promise<AccountType> {
+	createAccount(@Args('createAccountInput') createAccountInput: CreateAccountInput): Promise<AccountEntity> {
 		return this.accountService.createAccount(createAccountInput)
 	}
 
 	@Mutation(() => AccountType)
-	findOrCreateAccount(@Args('createAccountInput') createAccountInput: CreateAccountInput): Promise<AccountType> {
+	findOrCreateAccount(@Args('createAccountInput') createAccountInput: CreateAccountInput): Promise<AccountEntity> {
 		return this.accountService.findOrCreateAccount(createAccountInput)
 	}
 
 	@Query(() => PaginatedAccountsType)
 	accounts(
 		@Args('sort', { type: () => SortInput, nullable: true }) sort?: SortInput | undefined,
-	): Promise<PaginatedAccountsType> {
+	): Promise<PaginatedAccounts> {
 		return this.accountService.findAll(sort)
 	}
 
