@@ -7,6 +7,7 @@ import { zeroAddress } from 'viem'
 import { UploadFileDto } from './dto/upload-file.dto'
 import { AccountService } from '@/account/account.service'
 import { StemService } from '@/stem/stem.service'
+import { StemEntity } from '@/schema/entities'
 
 @Injectable()
 export class PinataService {
@@ -21,7 +22,7 @@ export class PinataService {
 		})
 	}
 
-	async uploadFile(uploadFileDto: UploadFileDto, file: Express.Multer.File): Promise<PinResponse> {
+	async uploadFile(uploadFileDto: UploadFileDto, file: Express.Multer.File): Promise<{pinataData: PinResponse, stem: StemEntity}> {
 		try {
 			// TODO: Upload to a folder
 
@@ -44,11 +45,10 @@ export class PinataService {
 				projectId: uploadFileDto.projectId,
 				createdBy: uploadFileDto.createdBy,
 			}
-			const res = await this.stemService.create(stemDto)
-			console.log('new stem entity', { res })
+			const stem = await this.stemService.create(stemDto)
 
-			// Return the Pinata data
-			return pinataFile
+			// Return the Pinata data alongside the new Stem data
+			return { pinataData: pinataFile, stem }
 		} catch (error) {
 			throw new BadRequestException('Error uploading file to Pinata')
 		}
