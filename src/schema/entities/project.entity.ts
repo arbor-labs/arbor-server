@@ -31,23 +31,23 @@ export class ProjectEntity extends BaseEntity<ProjectEntity> {
 	createdBy: AccountEntity
 
 	@JoinTable({ name: 'project_collaborators' })
-	@ManyToMany(() => AccountEntity, entity => entity.collaboratedProjects, { cascade: true })
+	@ManyToMany(() => AccountEntity, account => account.collaboratedProjects)
 	collaborators: AccountEntity[]
 
 	@JoinTable({ name: 'project_stems' })
-	@ManyToMany(() => StemEntity, entity => entity.projectsAddedTo, { cascade: true })
+	@ManyToMany(() => StemEntity, stem => stem.projectsAddedTo)
 	stems: StemEntity[]
 
 	@JoinColumn()
-	@OneToOne(() => ProjectQueueEntity, { cascade: true })
+	@OneToOne(() => ProjectQueueEntity, { cascade: true }) // Created when a new project is created
 	queue: ProjectQueueEntity
 
 	@JoinColumn()
-	@OneToOne(() => VotingGroupEntity, { cascade: true })
+	@OneToOne(() => VotingGroupEntity, { cascade: true }) // Created when a new project is created
 	votingGroup: VotingGroupEntity
 
 	// @Column({ type: 'simple-array', default: [] })
-	// @OneToMany(() => SongEntity, entity => entity.project, { cascade: true })
+	// @OneToMany(() => SongEntity, song => song.project)
 	// songsMinted: SongEntity[]
 }
 

@@ -1,35 +1,43 @@
 import { registerEnumType } from '@nestjs/graphql'
 
 export enum EFileType {
-	WAV = 'wav',
-	MP3 = 'mp3',
-	FLAC = 'flac',
-	AAC = 'aac',
-	OGG = 'ogg',
-	AIFF = 'aiff',
+	WAV = 'audio/wav',
+	XWAV = 'audio/x-wav',
+	WAVE = 'audio/wave',
+	// MP3 = 'mp3',
+	// FLAC = 'flac',
+	// AAC = 'aac',
+	// OGG = 'ogg',
+	// AIFF = 'aiff',
 }
 
 registerEnumType(EFileType, {
 	name: 'FileType',
-	description: 'The type of audio file format.',
+	description: 'The MIME type of the audio file format.',
 	valuesMap: {
 		WAV: {
-			description: 'Waveform Audio File Format, a raw audio format.',
+			description: 'Standard MIME type for Waveform Audio File Format (WAV)',
 		},
-		MP3: {
-			description: 'MPEG-1 Audio Layer III, a compressed audio format.',
+		XWAV: {
+			description: 'Alternative MIME type for WAV files, used by some systems',
 		},
-		FLAC: {
-			description: 'Free Lossless Audio Codec, a lossless compression format.',
+		WAVE: {
+			description: 'Legacy MIME type for WAV files, maintained for compatibility',
 		},
-		AAC: {
-			description: 'Advanced Audio Coding, a lossy compression format.',
-		},
-		OGG: {
-			description: 'Ogg Vorbis, a free and open-source lossy compression format.',
-		},
-		AIFF: {
-			description: 'Audio Interchange File Format, a standard for storing sound data.',
-		},
+		// MP3: {
+		// 	description: 'MPEG-1 Audio Layer III, a compressed audio format.',
+		// },
+		// FLAC: {
+		// 	description: 'Free Lossless Audio Codec, a lossless compression format.',
+		// },
+		// AAC: {
+		// 	description: 'Advanced Audio Coding, a lossy compression format.',
+		// },
+		// OGG: {
+		// 	description: 'Ogg Vorbis, a free and open-source lossy compression format.',
+		// },
+		// AIFF: {
+		// 	description: 'Audio Interchange File Format, a standard for storing sound data.',
+		// },
 	},
 })

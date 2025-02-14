@@ -6,7 +6,7 @@ import { StemEntity } from './stem.entity'
 
 @Entity('queued_stems')
 export class QueuedStemEntity extends BaseEntity<QueuedStemEntity> {
-	@ManyToOne(() => ProjectQueueEntity, entity => entity.stems)
+	@ManyToOne(() => ProjectQueueEntity, queue => queue.stems)
 	queue: ProjectQueueEntity
 
 	@ManyToOne(() => StemEntity)

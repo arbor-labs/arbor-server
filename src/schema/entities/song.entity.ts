@@ -18,10 +18,10 @@
 // 	@Column()
 // 	name: string
 
-// 	@ManyToOne(() => AccountEntity, entity => entity.createdSongs)
+// 	@ManyToOne(() => AccountEntity, account => account.createdSongs)
 // 	createdBy: string
 
-// 	@ManyToOne(() => AccountEntity, entity => entity.collectedSongs)
+// 	@ManyToOne(() => AccountEntity, account => account.collectedSongs)
 // 	owner: AccountEntity
 
 // 	@Column()
@@ -44,10 +44,10 @@
 // 	project: ProjectEntity
 
 // 	@JoinTable()
-// 	@ManyToMany(() => AccountEntity, entity => entity.collaboratedProjects)
+// 	@ManyToMany(() => AccountEntity, account => account.collaboratedProjects)
 // 	collaborators: AccountEntity[]
 
 // 	@JoinTable()
-// 	@ManyToMany(() => StemEntity, entity => entity.songsIncludedIn)
+// 	@ManyToMany(() => StemEntity, stem => stem.songsIncludedIn)
 // 	stems: StemEntity[]
 // }

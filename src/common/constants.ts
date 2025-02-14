@@ -2,3 +2,6 @@ export const PAGINATION_DEFAULTS = {
 	PAGE: 1,
 	ITEMS_PER_PAGE: 10,
 }
+
+// 20MB
+export const MAX_UPLOAD_FILE_SIZE = 20 * 1024 * 1024

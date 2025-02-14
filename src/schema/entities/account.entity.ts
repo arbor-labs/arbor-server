@@ -25,24 +25,23 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
 	@Column({ nullable: true })
 	avatarUrl: string // base64 encoded image
 
-	// @Column({ type: 'simple-array', default: [] })
-	@ManyToMany(() => ProjectEntity, entity => entity.collaborators)
+	@ManyToMany(() => ProjectEntity, project => project.collaborators)
 	collaboratedProjects: ProjectEntity[]
 
 	@JoinColumn()
-	@OneToMany(() => StemEntity, entity => entity.createdBy)
-	stems: StemEntity[]
+	@OneToMany(() => StemEntity, stem => stem.createdBy)
+	uploadedStems: StemEntity[]
 
 	// @Column({ type: 'simple-array', default: [] })
-	@OneToMany(() => SemaphoreIdentityEntity, entity => entity.account)
+	@OneToMany(() => SemaphoreIdentityEntity, identity => identity.account)
 	voterIdentities: SemaphoreIdentityEntity[]
 
 	// @Column({ type: 'simple-array', default: [] })
-	// @OneToMany(() => SongEntity, entity => entity.createdBy)
+	// @OneToMany(() => SongEntity, song => song.createdBy)
 	// createdSongs: SongEntity[]
 
 	// @Column({ type: 'simple-array', default: [] })
-	// @OneToMany(() => SongEntity, entity => entity.owner)
+	// @OneToMany(() => SongEntity, song => songsIncludedIn.owner)
 	// collectedSongs: SongEntity[]
 }
 

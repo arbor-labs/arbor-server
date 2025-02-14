@@ -11,31 +11,34 @@ export class StemType extends BaseType {
 	@Field()
 	name: string
 
-	@Field()
-	description: string
+	// @Field()
+	// description: string
 
-	@Field(() => [String])
-	tags: string[]
+	// @Field(() => [String])
+	// tags: string[]
 
-	@Field(() => Int)
-	bpm: number
+	// @Field(() => Int)
+	// bpm: number
 
-	@Field()
+	@Field(() => String)
 	type: EStemType
 
 	@Field()
-	metadataUrl: string
+	metadataCID: string
 
 	@Field()
-	audioUrl: string
+	audioCID: string
 
-	@Field()
-	audioHref: string
+	// @Field()
+	// metadataUrl: string
+
+	// @Field()
+	// audioUrl: string
 
 	@Field()
 	filename: string
 
-	@Field()
+	@Field(() => String)
 	filetype: EFileType
 
 	@Field(() => Int)

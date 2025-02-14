@@ -70,6 +70,21 @@ type PaginationMeta {
   totalPages: Int!
 }
 
+type PinataCIDResponse {
+  contentType: PinataContentType
+  data: PinataData
+}
+
+"""
+A valid content type supported by both Pinata and Arbor, usually NFT metadata and WAV audio files: https://docs.pinata.cloud/sdk/gateways/get#returns.
+"""
+scalar PinataContentType @specifiedBy(url: "https://docs.pinata.cloud/sdk/gateways/get#returns")
+
+"""
+Custom scalar type for Pinata data that can JSON or a base64 encoded string of a Blob.
+"""
+scalar PinataData
+
 type Project {
   bpm: Int!
   collaborators: [Account!]
@@ -96,6 +111,7 @@ type ProjectQueue {
 type Query {
   account(address: EthereumAddress!): Account
   accounts(sort: SortInput): PaginatedAccounts!
+  getFile(cid: String!): PinataCIDResponse!
   project(id: String!): Project!
   projects(sort: SortInput): PaginatedProjects!
 }
@@ -126,20 +142,16 @@ input SortInput {
 }
 
 type Stem {
-  audioHref: String!
-  audioUrl: String!
-  bpm: Int!
+  audioCID: String!
   createdAt: DateTime!
   createdBy: Account!
-  description: String!
   filename: String!
   filesize: Int!
   filetype: String!
   id: ID!
-  metadataUrl: String!
+  metadataCID: String!
   name: String!
   projectsAddedTo: [Project!]!
-  tags: [String!]!
   type: String!
   updatedAt: DateTime!
 }

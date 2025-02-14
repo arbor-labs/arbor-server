@@ -1,43 +1,43 @@
 import { registerEnumType } from '@nestjs/graphql'
 
 export enum EStemType {
-	DRUMS = 'drums',
-	PERCUSSION = 'percussion',
-	BASS = 'bass',
-	CHORDS = 'chords',
 	MELODY = 'melody',
+	HARMONY = 'harmony',
+	RHYTHM = 'rhythm',
+	BASS = 'bass',
+	DRUMS = 'drums',
 	VOCALS = 'vocals',
-	COMBO = 'combo',
+	FX = 'fx',
 	OTHER = 'other',
 }
 
 registerEnumType(EStemType, {
 	name: 'StemType',
-	description: 'The type of stem in a musical composition.',
+	description: 'The type/role of the stem in the project',
 	valuesMap: {
-		DRUMS: {
-			description: 'Drum instruments such as kick, snare, and hi-hat.',
+		MELODY: {
+			description: 'Lead melodic elements like guitar solos or synth leads',
 		},
-		PERCUSSION: {
-			description: 'Percussion instruments such as shakers and cymbals.',
+		HARMONY: {
+			description: 'Harmonic elements like chord progressions or pad sounds',
+		},
+		RHYTHM: {
+			description: 'Rhythmic elements like rhythm guitar or percussion',
 		},
 		BASS: {
-			description: 'Bass instruments providing the low-end frequencies.',
+			description: 'Bass instruments including bass guitar or synth bass',
 		},
-		CHORDS: {
-			description: 'Chordal instruments providing harmonic support.',
-		},
-		MELODY: {
-			description: 'Melodic instruments carrying the main tune.',
+		DRUMS: {
+			description: 'Drum and percussion elements',
 		},
 		VOCALS: {
-			description: 'Vocal tracks including lead and backing vocals.',
+			description: 'Vocal tracks including lead and backing vocals',
 		},
-		COMBO: {
-			description: 'A combination of multiple stem types.',
+		FX: {
+			description: 'Sound effects and atmospheric elements',
 		},
 		OTHER: {
-			description: 'Any other type of recording, such as samples, nature sounds, sound effects, etc.',
+			description: "Other musical elements that don't fit the above categories",
 		},
 	},
 })

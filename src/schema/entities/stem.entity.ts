@@ -14,42 +14,45 @@ export class StemEntity extends BaseEntity<StemEntity> {
 	@Index({ unique: true })
 	name: string
 
-	@Column({ length: 200 })
-	description: string
+	// @Column({ length: 200 })
+	// description: string
 
-	@Column('simple-array', { default: [] })
-	tags: string[]
+	// @Column('simple-array', { default: [] })
+	// tags: string[]
 
-	@Column()
-	bpm: number
+	// @Column()
+	// bpm: number
 
 	@Column()
 	type: EStemType
 
 	@Column()
-	metadataUrl: string
+	metadataCID: string
 
 	@Column()
-	audioUrl: string
+	audioCID: string
 
-	@Column()
-	audioHref: string
+	// @Column()
+	// metadataUrl: string
+
+	// @Column()
+	// audioUrl: string
 
 	@Column()
 	filename: string
 
 	@Column()
-	filetype: EFileType
+	filetype: string
 
 	@Column('int')
 	filesize: number
 
-	@ManyToOne(() => AccountEntity, entity => entity.stems)
+	@ManyToOne(() => AccountEntity, account => account.uploadedStems)
 	createdBy: AccountEntity
 
-	@ManyToMany(() => ProjectEntity, entity => entity.stems)
+	@ManyToMany(() => ProjectEntity, project => project.stems)
 	projectsAddedTo: ProjectEntity[]
 
-	// @ManyToMany(() => SongEntity, entity => entity.stems)
+	// @ManyToMany(() => SongEntity, song => song.stems)
 	// songsIncludedIn: SongEntity[]
 }

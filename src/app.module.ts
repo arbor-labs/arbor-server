@@ -3,6 +3,7 @@ import { ApolloDriver } from '@nestjs/apollo'
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
+import { MulterModule } from '@nestjs/platform-express'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import * as Joi from 'joi'
 import { join } from 'path'
@@ -10,7 +11,9 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 import { AccountModule } from './account/account.module'
 import { LoggerModule } from './logger/logger.module'
+import { PinataModule } from './pinata/pinata.module'
 import { ProjectModule } from './project/project.module'
+import { StemModule } from './stem/stem.module'
 import * as entities from './schema/entities'
 
 @Module({
@@ -32,6 +35,10 @@ import * as entities from './schema/entities'
 			playground: true,
 			introspection: true,
 		}),
+		// File Upload - https://github.com/expressjs/multer#multeropts
+		MulterModule.register({
+			dest: './upload',
+		}),
 		// Database
 		TypeOrmModule.forRootAsync({
 			useFactory: (configService: ConfigService) => ({
@@ -49,6 +56,8 @@ import * as entities from './schema/entities'
 		// Other
 		AccountModule,
 		ProjectModule,
+		PinataModule,
+		StemModule,
 	],
 })
 export class AppModule {}
