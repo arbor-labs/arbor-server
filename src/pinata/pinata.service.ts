@@ -22,7 +22,10 @@ export class PinataService {
 		})
 	}
 
-	async uploadFile(uploadFileDto: UploadFileDto, file: Express.Multer.File): Promise<{pinataData: PinResponse, stem: StemEntity}> {
+	async uploadFile(
+		uploadFileDto: UploadFileDto,
+		file: Express.Multer.File,
+	): Promise<{ pinataData: PinResponse; stem: StemEntity }> {
 		try {
 			// TODO: Upload to a folder
 
