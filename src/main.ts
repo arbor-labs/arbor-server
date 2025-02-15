@@ -34,8 +34,7 @@ async function bootstrap() {
 				'https://api.arbor.audio',
 			]
 			// Vercel Webapp builds
-			// TODO: update in Vercel
-			const vercelWebappRegex = /^https:\/\/arbor-*-dco\.vercel\.app$/
+			const vercelWebappRegex = /^https:\/\/arbor-*-dcodev\.vercel\.app$/
 
 			if (allowedOrigins.includes(origin) || vercelWebappRegex.test(origin)) {
 				callback(null, true)
