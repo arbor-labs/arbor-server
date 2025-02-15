@@ -8,10 +8,10 @@ import { EStemType } from '@/schema/enums/stem-type.enum'
 
 @ObjectType('Stem')
 export class StemType extends BaseType {
-	@Field()
+	@Field(() => String)
 	name: string
 
-	// @Field()
+	// @Field(() => String)
 	// description: string
 
 	// @Field(() => [String])
@@ -23,19 +23,13 @@ export class StemType extends BaseType {
 	@Field(() => String)
 	type: EStemType
 
-	@Field()
+	@Field(() => String)
 	metadataCID: string
 
-	@Field()
+	@Field(() => String)
 	audioCID: string
 
-	// @Field()
-	// metadataUrl: string
-
-	// @Field()
-	// audioUrl: string
-
-	@Field()
+	@Field(() => String)
 	filename: string
 
 	@Field(() => String)

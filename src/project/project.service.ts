@@ -18,10 +18,6 @@ export class ProjectService {
 		@Inject(AccountService) private accountService: AccountService,
 		@InjectRepository(ProjectEntity)
 		private projectRepository: Repository<ProjectEntity>,
-		// @InjectRepository(VotingGroupEntity)
-		// private votingGroupRepository: Repository<VotingGroupEntity>,
-		// @InjectRepository(ProjectQueueEntity)
-		// private projectQueueRepository: Repository<ProjectQueueEntity>,
 	) {}
 
 	async create(createProjectInput: CreateProjectInput): Promise<ProjectEntity> {
@@ -51,6 +47,7 @@ export class ProjectService {
 			.leftJoinAndSelect('project.createdBy', 'createdBy')
 			.leftJoinAndSelect('project.collaborators', 'collaborators')
 			.leftJoinAndSelect('project.stems', 'stems')
+			.leftJoinAndSelect('stems.createdBy', 'stemCreator')
 			.leftJoinAndSelect('project.queue', 'queue')
 		// .leftJoinAndSelect("project.queue.stems", "queue.stems")
 
@@ -73,6 +70,7 @@ export class ProjectService {
 			.leftJoinAndSelect('project.createdBy', 'createdBy')
 			.leftJoinAndSelect('project.collaborators', 'collaborators')
 			.leftJoinAndSelect('project.stems', 'stems')
+			.leftJoinAndSelect('stems.createdBy', 'stemCreator')
 			.leftJoinAndSelect('project.queue', 'queue')
 			.getOneOrFail()
 	}

@@ -1,18 +1,15 @@
-import { EStemType } from '@/schema/enums/stem-type.enum'
 import { CreateStemDto } from '@/stem/dto/create-stem.dto'
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import type { GetCIDResponse, PinResponse } from 'pinata-web3'
 import { PinataSDK } from 'pinata-web3'
-import { zeroAddress } from 'viem'
 import { UploadFileDto } from './dto/upload-file.dto'
-import { AccountService } from '@/account/account.service'
 import { StemService } from '@/stem/stem.service'
 import { StemEntity } from '@/schema/entities'
 
 @Injectable()
 export class PinataService {
 	private pinata: PinataSDK
-	// private baseUrl = 'https://amber-pleased-sloth-337.mypinata.cloud/ipfs/'
+	private baseUrl = 'https://amber-pleased-sloth-337.mypinata.cloud/ipfs/'
 	private groupId = '07cc4fed-2485-4d27-a93e-c0694f6e9c75'
 
 	constructor(@Inject(StemService) private stemService: StemService) {
@@ -28,10 +25,10 @@ export class PinataService {
 	): Promise<{ pinataData: PinResponse; stem: StemEntity }> {
 		try {
 			// TODO: Upload to a folder
+			// TODO: Upload JSON metadata for NFT
 
 			// 1. Upload file to Pinata
 			const nativeFile = new File([file.buffer], file.originalname, { type: file.mimetype })
-			// TODO: Upload JSON metadata for NFT
 			const pinataFile = await this.pinata.upload.file(nativeFile, {
 				groupId: this.groupId,
 			})
