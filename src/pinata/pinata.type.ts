@@ -1,5 +1,5 @@
 import { PinataContentType } from '@/common/scalars/PinataContentType.scalar'
-import { PinataDataScalar } from '@/common/scalars/PinataDataType.scalar'
+import { PinataDataScalar } from '@/common/scalars/PinataData.scalar'
 import { Field, ObjectType } from '@nestjs/graphql'
 import { type ContentType } from 'pinata-web3'
 

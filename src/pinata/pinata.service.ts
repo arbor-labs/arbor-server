@@ -33,6 +33,8 @@ export class PinataService {
 				groupId: this.groupId,
 			})
 
+			console.log({ pinataFile })
+
 			// 2. Create a new Stem entity in DB
 			const stemDto: CreateStemDto = {
 				name: uploadFileDto.name,
@@ -46,10 +48,12 @@ export class PinataService {
 				createdBy: uploadFileDto.createdBy,
 			}
 			const stem = await this.stemService.create(stemDto)
+			console.log({stem})
 
 			// Return the Pinata data alongside the new Stem data
 			return { pinataData: pinataFile, stem }
 		} catch (error) {
+			console.error(error)
 			throw new BadRequestException('Error uploading file to Pinata')
 		}
 	}
