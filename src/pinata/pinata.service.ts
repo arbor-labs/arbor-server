@@ -48,7 +48,7 @@ export class PinataService {
 				createdBy: uploadFileDto.createdBy,
 			}
 			const stem = await this.stemService.create(stemDto)
-			console.log({stem})
+			console.log({ stem })
 
 			// Return the Pinata data alongside the new Stem data
 			return { pinataData: pinataFile, stem }
