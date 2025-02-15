@@ -32,6 +32,7 @@ async function bootstrap() {
 				'https://arbor.up.railway.app',
 				'https://arbor.audio',
 				'https://api.arbor.audio',
+				'https://arbor-ui-git-main-dcodev.vercel.app',
 			]
 			// Vercel Webapp builds
 			const vercelWebappRegex = /^https:\/\/arbor-*-dcodev\.vercel\.app$/
