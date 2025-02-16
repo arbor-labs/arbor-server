@@ -6,6 +6,7 @@ import { EFileType } from '../enums/file-type.enum'
 import { EStemType } from '../enums/stem-type.enum'
 import { AccountEntity } from './account.entity'
 import { BaseEntity } from './base.entity'
+import { IPaginatedType } from '@/common/types'
 
 @Entity('stems')
 @Unique('UniqueStemName', ['name'])
@@ -56,3 +57,5 @@ export class StemEntity extends BaseEntity<StemEntity> {
 	// @ManyToMany(() => SongEntity, song => song.stems)
 	// songsIncludedIn: SongEntity[]
 }
+
+export type PaginatedStems = IPaginatedType<StemEntity>

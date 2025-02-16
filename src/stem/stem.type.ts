@@ -48,5 +48,5 @@ export class StemType extends BaseType {
 	// songsIncludedIn: SongType[]
 }
 
-@ObjectType('PaginatedProjects')
-export class PaginatedProjectsType extends Paginated(ProjectType) {}
+@ObjectType('PaginatedStems')
+export class PaginatedStemsType extends Paginated(StemType) {}

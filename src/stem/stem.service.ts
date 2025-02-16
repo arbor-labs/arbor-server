@@ -1,10 +1,14 @@
-import { ProjectEntity, StemEntity, type AccountEntity } from '@/schema/entities'
+import { PaginatedStems, StemEntity } from '@/schema/entities'
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { CreateStemDto } from './dto/create-stem.dto'
 import { AccountService } from '@/account/account.service'
 import { ProjectService } from '@/project/project.service'
+import { PaginationService } from '@/common/pagination.service'
+import { SortInput } from '@/common/dtos/sort.input'
+import { PaginatedStemsType } from './stem.type'
+import { SortingService } from '@/common/sorting.service'
 
 @Injectable()
 export class StemService {
@@ -41,5 +45,33 @@ export class StemService {
 		await this.projectService.addStemToProject(project.id, savedStem)
 
 		return savedStem
+	}
+
+	async findAll(sort?: SortInput | undefined): Promise<PaginatedStems> {
+		const qb = this.stemRepository
+			.createQueryBuilder('stem')
+			.leftJoinAndSelect('stem.createdBy', 'createdBy')
+			.leftJoinAndSelect('stem.projectsAddedTo', 'projectsAddedTo')
+
+		// Apply sorting
+		if (sort) SortingService.applySorting(sort, qb)
+
+		// Apply pagination
+		const paginatedItems = await PaginationService.getPaginatedItems({ classRef: StemEntity, qb })
+
+		return paginatedItems
+	}
+
+	async findStemById(id: string): Promise<StemEntity> {
+		const stem = await this.stemRepository.findOne({
+			where: { id },
+			relations: ['createdBy', 'projectsAddedTo'],
+		})
+
+		if (!stem) {
+			throw new NotFoundException(`Stem with id ${id} not found`)
+		}
+
+		return stem
 	}
 }
