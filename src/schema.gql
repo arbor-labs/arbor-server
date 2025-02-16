@@ -6,13 +6,13 @@ type Account {
   address: EthereumAddress!
   avatarUrl: String
   collaboratedProjects: [Project!]!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   createdProjects: [Project!]!
   displayName: String
   id: ID!
   onboardingSignature: EthereumSignature!
   stems: [Stem!]!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   voterIdentities: [SemaphoreIdentity!]!
 }
 
@@ -31,9 +31,9 @@ input CreateProjectInput {
 }
 
 """
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
 """
-scalar DateTime
+scalar DateTimeISO
 
 """
 A string whose value conforms to the standard Ethereum address format as specified in EIP-150 Revision (212): http://gavwood.com/paper.pdf.
@@ -93,7 +93,7 @@ scalar PinataData
 type Project {
   bpm: Int!
   collaborators: [Account!]
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   createdBy: Account!
   description: String!
   id: ID!
@@ -102,15 +102,15 @@ type Project {
   stems: [Stem!]
   tags: [String!]!
   trackLimit: Int!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   votingGroup: VotingGroup!
 }
 
 type ProjectQueue {
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   id: ID!
   stems: [QueuedStem!]!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type Query {
@@ -124,23 +124,23 @@ type Query {
 }
 
 type QueuedStem {
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   id: ID!
   queue: ProjectQueue!
   stem: Stem!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
   votes: Int!
 }
 
 type SemaphoreIdentity {
   account: Account!
   commitment: String!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   group: VotingGroup!
   id: ID!
   nullifier: String!
   trapdoor: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 input SortInput {
@@ -150,7 +150,7 @@ input SortInput {
 
 type Stem {
   audioCID: String!
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   createdBy: Account!
   filename: String!
   filesize: Int!
@@ -160,12 +160,12 @@ type Stem {
   name: String!
   projectsAddedTo: [Project!]!
   type: String!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
 
 type VotingGroup {
-  createdAt: DateTime!
+  createdAt: DateTimeISO!
   id: ID!
   members: [SemaphoreIdentity!]!
-  updatedAt: DateTime!
+  updatedAt: DateTimeISO!
 }
