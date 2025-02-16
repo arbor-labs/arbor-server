@@ -32,12 +32,6 @@ export class StemEntity extends BaseEntity<StemEntity> {
 	@Column()
 	audioCID: string
 
-	// @Column()
-	// metadataUrl: string
-
-	// @Column()
-	// audioUrl: string
-
 	@Column()
 	filename: string
 
