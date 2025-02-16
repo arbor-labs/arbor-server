@@ -1,12 +1,11 @@
 import { Column, Entity, Index, ManyToMany, ManyToOne, Unique } from 'typeorm'
 
+import type { IPaginatedType } from '@/common/types'
 import { ProjectEntity } from '@/schema/entities/project.entity'
 
-import { EFileType } from '../enums/file-type.enum'
 import { EStemType } from '../enums/stem-type.enum'
 import { AccountEntity } from './account.entity'
 import { BaseEntity } from './base.entity'
-import { IPaginatedType } from '@/common/types'
 
 @Entity('stems')
 @Unique('UniqueStemName', ['name'])

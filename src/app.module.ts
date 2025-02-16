@@ -13,8 +13,8 @@ import { AccountModule } from './account/account.module'
 import { LoggerModule } from './logger/logger.module'
 import { PinataModule } from './pinata/pinata.module'
 import { ProjectModule } from './project/project.module'
-import { StemModule } from './stem/stem.module'
 import * as entities from './schema/entities'
+import { StemModule } from './stem/stem.module'
 
 @Module({
 	imports: [

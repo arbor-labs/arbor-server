@@ -13,9 +13,8 @@ import { Express } from 'express'
 
 import { MAX_UPLOAD_FILE_SIZE } from '@/common/constants'
 
-import { PinataService } from './pinata.service'
-import { CreateStemDto } from '@/stem/dto/create-stem.dto'
 import { UploadFileDto } from './dto/upload-file.dto'
+import { PinataService } from './pinata.service'
 
 @Controller('pinata')
 export class PinataController {

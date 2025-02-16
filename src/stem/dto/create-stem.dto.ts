@@ -1,4 +1,3 @@
-import { Field, InputType } from '@nestjs/graphql'
 import {
 	IsDefined,
 	IsEnum,
@@ -11,11 +10,10 @@ import {
 	Max,
 	Min,
 } from 'class-validator'
-
 import { Address } from 'viem'
 
-import { EStemType } from '@/schema/enums/stem-type.enum'
 import { EFileType } from '@/schema/enums/file-type.enum'
+import { EStemType } from '@/schema/enums/stem-type.enum'
 
 export class CreateStemDto {
 	@IsDefined()

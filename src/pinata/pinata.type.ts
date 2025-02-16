@@ -1,7 +1,8 @@
-import { PinataContentType } from '@/common/scalars/PinataContentType.scalar'
-import { PinataDataScalar } from '@/common/scalars/PinataData.scalar'
 import { Field, ObjectType } from '@nestjs/graphql'
 import { type ContentType } from 'pinata-web3'
+
+import { PinataContentType } from '@/common/scalars/PinataContentType.scalar'
+import { PinataDataScalar } from '@/common/scalars/PinataData.scalar'
 
 // This is what is returned from a successful POST to /pinata/upload
 // @ObjectType('PinataFile')

@@ -1,10 +1,12 @@
-import { CreateStemDto } from '@/stem/dto/create-stem.dto'
 import { BadRequestException, Inject, Injectable } from '@nestjs/common'
 import type { GetCIDResponse, PinResponse } from 'pinata-web3'
 import { PinataSDK } from 'pinata-web3'
-import { UploadFileDto } from './dto/upload-file.dto'
+
+import type { StemEntity } from '@/schema/entities'
+import type { CreateStemDto } from '@/stem/dto/create-stem.dto'
 import { StemService } from '@/stem/stem.service'
-import { StemEntity } from '@/schema/entities'
+
+import type { UploadFileDto } from './dto/upload-file.dto'
 
 @Injectable()
 export class PinataService {

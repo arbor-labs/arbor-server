@@ -1,9 +1,11 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
+
 import { SortInput } from '@/common/dtos/sort.input'
+import type { PaginatedStems, StemEntity } from '@/schema/entities'
+
+import { StemService } from './stem.service'
 import { PaginatedStemsType } from './stem.type'
 import { StemType } from './stem.type'
-import { StemService } from './stem.service'
-import { PaginatedStems, StemEntity } from '@/schema/entities'
 
 @Resolver()
 export class StemResolver {

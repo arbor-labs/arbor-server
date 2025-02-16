@@ -1,14 +1,16 @@
-import { PaginatedStems, StemEntity } from '@/schema/entities'
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { CreateStemDto } from './dto/create-stem.dto'
+
 import { AccountService } from '@/account/account.service'
-import { ProjectService } from '@/project/project.service'
+import type { SortInput } from '@/common/dtos/sort.input'
 import { PaginationService } from '@/common/pagination.service'
-import { SortInput } from '@/common/dtos/sort.input'
-import { PaginatedStemsType } from './stem.type'
 import { SortingService } from '@/common/sorting.service'
+import { ProjectService } from '@/project/project.service'
+import type { PaginatedStems} from '@/schema/entities';
+import { StemEntity } from '@/schema/entities'
+
+import type { CreateStemDto } from './dto/create-stem.dto'
 
 @Injectable()
 export class StemService {

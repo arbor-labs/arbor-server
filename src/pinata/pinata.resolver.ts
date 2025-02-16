@@ -1,6 +1,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
+import type { GetCIDResponse } from 'pinata-web3'
+
 import { PinataService } from './pinata.service'
-import { GetCIDResponse } from 'pinata-web3'
 import { PinataCIDResponseType } from './pinata.type'
 
 @Resolver()
