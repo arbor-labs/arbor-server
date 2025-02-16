@@ -18,10 +18,10 @@ export class AccountResolver {
 		return this.accountService.createAccount(createAccountInput)
 	}
 
-	@Mutation(() => AccountType)
-	findOrCreateAccount(@Args('createAccountInput') createAccountInput: CreateAccountInput): Promise<AccountEntity> {
-		return this.accountService.findOrCreateAccount(createAccountInput)
-	}
+	// @Mutation(() => AccountType)
+	// findOrCreateAccount(@Args('createAccountInput') createAccountInput: CreateAccountInput): Promise<AccountEntity> {
+	// 	return this.accountService.findOrCreateAccount(createAccountInput)
+	// }
 
 	@Query(() => PaginatedAccountsType)
 	accounts(

@@ -20,7 +20,7 @@ export class AccountType extends BaseType {
 	displayName: string
 
 	@Field(() => String, { nullable: true })
-	avatarUrl: string // base64 encoded image
+	avatarUri: string
 
 	@Field(() => [ProjectType])
 	createdProjects: ProjectType[]

@@ -76,10 +76,10 @@ export class ProjectService {
 	}
 
 	async addStemToProject(id: string, stem: StemEntity) {
-		// Find the project
+		// Find the project with stems and collaborators
 		const project = await this.projectRepository.findOne({
 			where: { id },
-			relations: ['stems'],
+			relations: ['stems', 'collaborators'],
 		})
 
 		if (!project) {
@@ -93,6 +93,12 @@ export class ProjectService {
 
 		// Add stem to project's stems array
 		project.stems = [...project.stems, stem]
+
+		// Add stem creator to collaborators if not already present
+		const isCollaborator = project.collaborators.some(c => c.address === stem.createdBy.address)
+		if (!isCollaborator) {
+			project.collaborators = [...project.collaborators, stem.createdBy]
+		}
 
 		// Save and return updated project
 		return await this.projectRepository.save(project)

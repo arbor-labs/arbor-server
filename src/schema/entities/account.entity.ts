@@ -23,7 +23,7 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
 	displayName: string
 
 	@Column({ nullable: true })
-	avatarUrl: string // base64 encoded image
+	avatarUri: string
 
 	@ManyToMany(() => ProjectEntity, project => project.collaborators)
 	collaboratedProjects: ProjectEntity[]

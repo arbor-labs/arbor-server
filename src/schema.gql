@@ -4,7 +4,7 @@
 
 type Account {
   address: EthereumAddress!
-  avatarUrl: String
+  avatarUri: String
   collaboratedProjects: [Project!]!
   createdAt: DateTimeISO!
   createdProjects: [Project!]!
@@ -48,7 +48,6 @@ scalar EthereumSignature @specifiedBy(url: "http://gavwood.com/paper.pdf")
 type Mutation {
   createAccount(createAccountInput: CreateAccountInput!): Account!
   createProject(createProjectInput: CreateProjectInput!): Project!
-  findOrCreateAccount(createAccountInput: CreateAccountInput!): Account!
 }
 
 type PaginatedAccounts {
