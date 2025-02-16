@@ -7,7 +7,7 @@ import type { SortInput } from '@/common/dtos/sort.input'
 import { PaginationService } from '@/common/pagination.service'
 import { SortingService } from '@/common/sorting.service'
 import { ProjectService } from '@/project/project.service'
-import type { PaginatedStems} from '@/schema/entities';
+import type { PaginatedStems } from '@/schema/entities'
 import { StemEntity } from '@/schema/entities'
 
 import type { CreateStemDto } from './dto/create-stem.dto'

@@ -1,6 +1,6 @@
-import type { CustomScalar } from '@nestjs/graphql';
+import type { CustomScalar } from '@nestjs/graphql'
 import { Scalar } from '@nestjs/graphql'
-import type { ValueNode } from 'graphql';
+import type { ValueNode } from 'graphql'
 import { Kind } from 'graphql'
 
 @Scalar('PinataData')
