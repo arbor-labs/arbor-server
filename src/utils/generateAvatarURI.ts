@@ -33,7 +33,7 @@ export const generateAvatarURI = async () => {
 		randomizeIds: true,
 	})
 
-	const svg = await avatar.toDataUri()
+	const svg = avatar.toDataUri()
 
 	return svg
 }

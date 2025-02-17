@@ -40,17 +40,19 @@ export class AccountService {
 
 	async findAccountByAddress(address: Address): Promise<AccountEntity> {
 		const checksumAddress = getAddress(address)
-		const account = await this.accountRepository.findOne({
-			where: { address: checksumAddress },
-			relations: {
-				createdProjects: true,
-				collaboratedProjects: true,
-				uploadedStems: true,
-				voterIdentities: true,
-			},
-		})
-		if (!account) throw new EntityNotFoundError(AccountEntity, { address })
-		return account
+
+		return await this.accountRepository
+			.createQueryBuilder('account')
+			.leftJoinAndSelect('account.createdProjects', 'createdProjects')
+			.leftJoinAndSelect('account.collaboratedProjects', 'collaboratedProjects')
+			.leftJoinAndSelect('account.uploadedStems', 'uploadedStems')
+			.leftJoinAndSelect('account.voterIdentities', 'voterIdentities')
+			.leftJoinAndSelect('uploadedStems.projectsAddedTo', 'stemProjects')
+			.leftJoinAndSelect('uploadedStems.createdBy', 'stemCreator')
+			.leftJoinAndSelect('createdProjects.stems', 'projectStems')
+			.leftJoinAndSelect('createdProjects.collaborators', 'projectCollaborators')
+			.where('account.address = :address', { address: checksumAddress })
+			.getOneOrFail()
 	}
 
 	async createAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {

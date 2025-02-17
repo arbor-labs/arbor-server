@@ -69,6 +69,7 @@ export class StemService {
 		const stem = this.stemRepository.create({
 			...dto,
 			createdBy: account,
+			projectsAddedTo: [project],
 		})
 
 		// Save the stem first to get the ID, createdAt, updatedAt fields

@@ -5,14 +5,14 @@
 type Account {
   address: EthereumAddress!
   avatarUri: String!
-  collaboratedProjects: [Project!]
+  collaboratedProjects: [Project!]!
   createdAt: DateTimeISO!
-  createdProjects: [Project!]
+  createdProjects: [Project!]!
   displayName: String
   id: ID!
   onboardingSignature: EthereumSignature!
   updatedAt: DateTimeISO!
-  uploadedStems: [Stem!]
+  uploadedStems: [Stem!]!
   voterIdentities: [SemaphoreIdentity!]!
 }
 
@@ -91,14 +91,14 @@ scalar PinataData
 
 type Project {
   bpm: Int!
-  collaborators: [Account!]
+  collaborators: [Account!]!
   createdAt: DateTimeISO!
   createdBy: Account!
   description: String!
   id: ID!
   name: String!
   queue: ProjectQueue!
-  stems: [Stem!]
+  stems: [Stem!]!
   tags: [String!]!
   trackLimit: Int!
   updatedAt: DateTimeISO!

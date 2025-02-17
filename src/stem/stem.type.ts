@@ -41,7 +41,7 @@ export class StemType extends BaseType {
 	@Field(() => AccountType)
 	createdBy: AccountType
 
-	@Field(() => [ProjectType])
+	@Field(() => [ProjectType], { defaultValue: [] })
 	projectsAddedTo: ProjectType[]
 
 	// @Field(() => [SongType])

@@ -22,13 +22,13 @@ export class AccountType extends BaseType {
 	@Field(() => String)
 	avatarUri: string
 
-	@Field(() => [ProjectType], { nullable: true })
+	@Field(() => [ProjectType], { defaultValue: [] })
 	createdProjects: ProjectType[]
 
-	@Field(() => [ProjectType], { nullable: true })
+	@Field(() => [ProjectType], { defaultValue: [] })
 	collaboratedProjects: ProjectType[]
 
-	@Field(() => [StemType], { nullable: true })
+	@Field(() => [StemType], { defaultValue: [] })
 	uploadedStems: StemType[]
 
 	// @Field(() => [SongType])

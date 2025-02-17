@@ -8,8 +8,8 @@ import {
 	IsString,
 	IsUUID,
 	Max,
-	Min,
 	MaxLength,
+	Min,
 } from 'class-validator'
 import { Address } from 'viem'
 
