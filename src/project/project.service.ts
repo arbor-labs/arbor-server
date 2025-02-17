@@ -20,26 +20,10 @@ export class ProjectService {
 		private projectRepository: Repository<ProjectEntity>,
 	) {}
 
-	async create(createProjectInput: CreateProjectInput): Promise<ProjectEntity> {
-		// Create a new project queue for the project
-		const projectQueue = new ProjectQueueEntity()
-		projectQueue.stems = []
-
-		// Create a new voting group for the project
-		const votingGroup = new VotingGroupEntity()
-		votingGroup.members = []
-
-		// Get the account record
-		const account: AccountEntity = await this.accountService.findAccountByAddress(createProjectInput.createdBy)
-
-		// Create the project entity and assign relationships
-		const project = this.projectRepository.create({ ...createProjectInput, createdBy: account })
-		project.queue = projectQueue
-		project.votingGroup = votingGroup
-
-		// 4. Return the project entity - cascades for queue and voting group
+	async save(project: ProjectEntity): Promise<ProjectEntity> {
 		return await this.projectRepository.save(project)
 	}
+
 
 	async findAll(sort?: SortInput | undefined): Promise<PaginatedProjects> {
 		const qb = this.projectRepository
@@ -75,32 +59,62 @@ export class ProjectService {
 			.getOneOrFail()
 	}
 
-	async addStemToProject(id: string, stem: StemEntity) {
-		// Find the project with stems and collaborators
-		const project = await this.projectRepository.findOne({
-			where: { id },
-			relations: ['stems', 'collaborators'],
+	async create(createProjectInput: CreateProjectInput): Promise<ProjectEntity> {
+		// Create a new project queue for the project
+		const projectQueue = new ProjectQueueEntity()
+		projectQueue.stems = []
+
+		// Create a new voting group for the project
+		const votingGroup = new VotingGroupEntity()
+		votingGroup.members = []
+
+		// Get the account record
+		const account = await this.accountService.findAccountByAddress(createProjectInput.createdBy)
+
+		// Create the project entity and assign relationships
+		const project = this.projectRepository.create({
+			...createProjectInput,
+			createdBy: account,
+			collaborators: [],
+			stems: [],
+			queue: projectQueue,
+			votingGroup: votingGroup,
 		})
 
-		if (!project) {
-			throw new NotFoundException(`Project with id ${id} not found`)
-		}
+		// Update account record
+		account.createdProjects = [...account.createdProjects, project]
+		await this.accountService.save(account)
 
-		// Check if stem limit is reached
-		if (project.stems.length >= project.trackLimit) {
-			throw new BadRequestException(`Project track limit of ${project.trackLimit} has been reached`)
-		}
-
-		// Add stem to project's stems array
-		project.stems = [...project.stems, stem]
-
-		// Add stem creator to collaborators if not already present
-		const isCollaborator = project.collaborators.some(c => c.address === stem.createdBy.address)
-		if (!isCollaborator) {
-			project.collaborators = [...project.collaborators, stem.createdBy]
-		}
-
-		// Save and return updated project
-		return await this.projectRepository.save(project)
+		// 4. Return the project entity - cascades for queue and voting group
+		return await this.save(project)
 	}
+
+	// async addStemToProject(id: string, stem: StemEntity) {
+	// 	// Find the project with stems and collaborators
+	// 	const project = await this.projectRepository.findOne({
+	// 		where: { id },
+	// 		relations: ['stems', 'collaborators'],
+	// 	})
+
+	// 	if (!project) {
+	// 		throw new NotFoundException(`Project with id ${id} not found`)
+	// 	}
+
+	// 	// Check if stem limit is reached
+	// 	if (project.stems.length >= project.trackLimit) {
+	// 		throw new BadRequestException(`Project track limit of ${project.trackLimit} has been reached`)
+	// 	}
+
+	// 	// Add stem to project's stems array
+	// 	project.stems = [...project.stems, stem]
+
+	// 	// Add stem creator to collaborators if not already present
+	// 	const isCollaborator = project.collaborators.some(c => c.address === stem.createdBy.address)
+	// 	if (!isCollaborator) {
+	// 		project.collaborators = [...project.collaborators, stem.createdBy]
+	// 	}
+
+	// 	// Save and return updated project
+	// 	return await this.projectRepository.save(project)
+	// }
 }

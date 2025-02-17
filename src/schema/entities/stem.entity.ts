@@ -1,4 +1,4 @@
-import { Column, Entity, Index, ManyToMany, ManyToOne, Unique } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToMany, ManyToOne, Unique } from 'typeorm'
 
 import type { IPaginatedType } from '@/common/types'
 import { ProjectEntity } from '@/schema/entities/project.entity'
@@ -42,6 +42,7 @@ export class StemEntity extends BaseEntity<StemEntity> {
 	filesize: number
 
 	@ManyToOne(() => AccountEntity, account => account.uploadedStems)
+	@JoinColumn()
 	createdBy: AccountEntity
 
 	@ManyToMany(() => ProjectEntity, project => project.stems)

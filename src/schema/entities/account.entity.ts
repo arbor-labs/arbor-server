@@ -25,10 +25,12 @@ export class AccountEntity extends BaseEntity<AccountEntity> {
 	@Column({ nullable: true })
 	avatarUri: string
 
+	@OneToMany(() => ProjectEntity, project => project.createdBy)
+	createdProjects: ProjectEntity[]
+
 	@ManyToMany(() => ProjectEntity, project => project.collaborators)
 	collaboratedProjects: ProjectEntity[]
 
-	@JoinColumn()
 	@OneToMany(() => StemEntity, stem => stem.createdBy)
 	uploadedStems: StemEntity[]
 

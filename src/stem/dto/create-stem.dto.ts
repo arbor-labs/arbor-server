@@ -9,6 +9,7 @@ import {
 	IsUUID,
 	Max,
 	Min,
+	MaxLength
 } from 'class-validator'
 import { Address } from 'viem'
 
@@ -19,6 +20,7 @@ export class CreateStemDto {
 	@IsDefined()
 	@IsString()
 	@IsNotEmpty()
+	@MaxLength(32)
 	name: string
 
 	@IsDefined()

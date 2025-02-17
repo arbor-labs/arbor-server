@@ -19,24 +19,9 @@ export class AccountService {
 		private accountRepository: Repository<AccountEntity>,
 	) {}
 
-	async createAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {
-		// throw new BadRequestException('Creating account: Not implemented')
-		const checksumAddress = getAddress(createAccountInput.address)
-		const account = this.accountRepository.create({
-			onboardingSignature: createAccountInput.signature,
-			address: checksumAddress,
-			avatarUri: await generateAvatarURI(),
-		})
+	async save(account: AccountEntity): Promise<AccountEntity> {
 		return await this.accountRepository.save(account)
 	}
-
-	// async findOrCreateAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {
-	// 	const checksumAddress = getAddress(createAccountInput.address)
-	// 	const account = await this.accountRepository.findOneBy({ address: checksumAddress })
-	// 	if (account) return account
-	// 	const newAccount = await this.createAccount(createAccountInput)
-	// 	return newAccount
-	// }
 
 	async findAll(sort?: SortInput | undefined): Promise<PaginatedAccounts> {
 		const qb = this.accountRepository.createQueryBuilder('account')
@@ -54,16 +39,46 @@ export class AccountService {
 	}
 
 	async findAccountByAddress(address: Address): Promise<AccountEntity> {
-		// throw new BadRequestException('Finding account: Not implemented')
 		const checksumAddress = getAddress(address)
-		const account = await this.accountRepository.findOneBy({ address: checksumAddress })
+		const account = await this.accountRepository.findOne({
+			where: { address: checksumAddress },
+			relations: {
+				createdProjects: true,
+				collaboratedProjects: true,
+				uploadedStems: true,
+				voterIdentities: true,
+			},
+		})
 		if (!account) throw new EntityNotFoundError(AccountEntity, { address })
-		if (!account.avatarUri) await this.updateAvatarUri(account)
 		return account
 	}
 
-	async updateAvatarUri(account: AccountEntity): Promise<AccountEntity> {
-		account.avatarUri = await generateAvatarURI()
-		return await this.accountRepository.save(account)
+	async createAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {
+		const checksumAddress = getAddress(createAccountInput.address)
+		const account = this.accountRepository.create({
+			onboardingSignature: createAccountInput.signature,
+			address: checksumAddress,
+			avatarUri: await generateAvatarURI(),
+			createdProjects: [],
+			collaboratedProjects: [],
+			uploadedStems: [],
+			voterIdentities: [],
+		})
+		return await this.save(account)
 	}
+
+	async updateAvatarUri(account: AccountEntity): Promise<AccountEntity> {
+		const existingAccount = await this.accountRepository.findOneBy({ id: account.id })
+		if (!existingAccount) throw new EntityNotFoundError(AccountEntity, { id: account.id })
+		existingAccount.avatarUri = await generateAvatarURI()
+		return await this.save(existingAccount)
+	}
+
+	// async findOrCreateAccount(createAccountInput: CreateAccountInput): Promise<AccountEntity> {
+	// 	const checksumAddress = getAddress(createAccountInput.address)
+	// 	const account = await this.accountRepository.findOneBy({ address: checksumAddress })
+	// 	if (account) return account
+	// 	const newAccount = await this.createAccount(createAccountInput)
+	// 	return newAccount
+	// }
 }

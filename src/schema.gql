@@ -4,15 +4,15 @@
 
 type Account {
   address: EthereumAddress!
-  avatarUri: String
-  collaboratedProjects: [Project!]!
+  avatarUri: String!
+  collaboratedProjects: [Project!]
   createdAt: DateTimeISO!
-  createdProjects: [Project!]!
+  createdProjects: [Project!]
   displayName: String
   id: ID!
   onboardingSignature: EthereumSignature!
-  stems: [Stem!]!
   updatedAt: DateTimeISO!
+  uploadedStems: [Stem!]
   voterIdentities: [SemaphoreIdentity!]!
 }
 

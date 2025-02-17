@@ -27,23 +27,24 @@ export class ProjectEntity extends BaseEntity<ProjectEntity> {
 	@Column()
 	trackLimit: number
 
-	@ManyToOne(() => AccountEntity)
+	@ManyToOne(() => AccountEntity, account => account.createdProjects)
+	@JoinColumn()
 	createdBy: AccountEntity
 
-	@JoinTable({ name: 'project_collaborators' })
 	@ManyToMany(() => AccountEntity, account => account.collaboratedProjects)
+	@JoinTable({ name: 'project_collaborators' })
 	collaborators: AccountEntity[]
 
-	@JoinTable({ name: 'project_stems' })
 	@ManyToMany(() => StemEntity, stem => stem.projectsAddedTo)
+	@JoinTable({ name: 'project_stems' })
 	stems: StemEntity[]
 
+	@OneToOne(() => ProjectQueueEntity, { cascade: true })
 	@JoinColumn()
-	@OneToOne(() => ProjectQueueEntity, { cascade: true }) // Created when a new project is created
 	queue: ProjectQueueEntity
 
+	@OneToOne(() => VotingGroupEntity, { cascade: true })
 	@JoinColumn()
-	@OneToOne(() => VotingGroupEntity, { cascade: true }) // Created when a new project is created
 	votingGroup: VotingGroupEntity
 
 	// @Column({ type: 'simple-array', default: [] })

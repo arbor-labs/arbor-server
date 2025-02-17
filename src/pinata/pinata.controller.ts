@@ -43,7 +43,7 @@ export class PinataController {
 		} catch (error) {
 			return {
 				statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-				message: 'Error converting payload to a native NodeJS File type',
+				message: 'Error uploading file to Pinata',
 				error,
 			}
 		}

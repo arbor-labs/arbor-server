@@ -20,33 +20,8 @@ export class StemService {
 		@Inject(ProjectService) private projectService: ProjectService,
 	) {}
 
-	async create(dto: CreateStemDto): Promise<StemEntity> {
-		// Get the account record
-		const account = await this.accountService.findAccountByAddress(dto.createdBy)
-		if (!account) {
-			throw new NotFoundException(`Account with address ${dto.createdBy} not found`)
-		}
-
-		// Get the project record
-		const project = await this.projectService.findProjectById(dto.projectId)
-		if (!project) {
-			throw new NotFoundException(`Project with id ${dto.projectId} not found`)
-		}
-
-		// Create the stem entity with relationships
-		const stem = this.stemRepository.create({
-			...dto,
-			createdBy: account,
-			projectsAddedTo: [project], // Initial project that it's being added to, since this is only called when first uploading a stem to a project
-		})
-
-		// Save the stem entity with its relationships
-		const savedStem = await this.stemRepository.save(stem)
-
-		// Add stem to project
-		await this.projectService.addStemToProject(project.id, savedStem)
-
-		return savedStem
+	async save(stem: StemEntity): Promise<StemEntity> {
+		return await this.stemRepository.save(stem)
 	}
 
 	async findAll(sort?: SortInput | undefined): Promise<PaginatedStems> {
@@ -75,5 +50,40 @@ export class StemService {
 		}
 
 		return stem
+	}
+
+	async create(dto: CreateStemDto): Promise<StemEntity> {
+		// Get the account record
+		const account = await this.accountService.findAccountByAddress(dto.createdBy)
+		if (!account) {
+			throw new NotFoundException(`Account with address ${dto.createdBy} not found`)
+		}
+
+		// Get the project record
+		const project = await this.projectService.findProjectById(dto.projectId)
+		if (!project) {
+			throw new NotFoundException(`Project with id ${dto.projectId} not found`)
+		}
+
+		// Create the stem entity with relationships
+		const stem = this.stemRepository.create({
+			...dto,
+			createdBy: account,
+		})
+
+		// Save the stem first to get the ID, createdAt, updatedAt fields
+		const savedStem = await this.save(stem)
+
+		// Update account record
+		account.uploadedStems = [...account.uploadedStems, savedStem]
+		const savedAccount = await this.accountService.save(account)
+
+		// Update project record
+		project.stems = [...project.stems, savedStem]
+		project.collaborators = [...project.collaborators, savedAccount]
+		await this.projectService.save(project)
+
+		// Return the new stem entity
+		return savedStem
 	}
 }

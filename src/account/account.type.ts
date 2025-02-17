@@ -19,17 +19,17 @@ export class AccountType extends BaseType {
 	@Field(() => String, { nullable: true })
 	displayName: string
 
-	@Field(() => String, { nullable: true })
+	@Field(() => String)
 	avatarUri: string
 
-	@Field(() => [ProjectType])
+	@Field(() => [ProjectType], { nullable: true })
 	createdProjects: ProjectType[]
 
-	@Field(() => [ProjectType])
+	@Field(() => [ProjectType], { nullable: true })
 	collaboratedProjects: ProjectType[]
 
-	@Field(() => [StemType])
-	stems: StemType[]
+	@Field(() => [StemType], { nullable: true })
+	uploadedStems: StemType[]
 
 	// @Field(() => [SongType])
 	// createdSongs: SongEntity[]
