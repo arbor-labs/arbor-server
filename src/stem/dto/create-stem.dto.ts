@@ -9,7 +9,7 @@ import {
 	IsUUID,
 	Max,
 	Min,
-	MaxLength
+	MaxLength,
 } from 'class-validator'
 import { Address } from 'viem'
 

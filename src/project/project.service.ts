@@ -24,7 +24,6 @@ export class ProjectService {
 		return await this.projectRepository.save(project)
 	}
 
-
 	async findAll(sort?: SortInput | undefined): Promise<PaginatedProjects> {
 		const qb = this.projectRepository
 			.createQueryBuilder('project')

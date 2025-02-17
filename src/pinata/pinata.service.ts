@@ -64,45 +64,43 @@ export class PinataService {
 				external_url: 'https://arbor.audio/stems', // TODO: add stem ID to external URL
 				attributes: [
 					{
-						trait_type: "Stem Type",
+						trait_type: 'Stem Type',
 						// capitalize first letter
-						value: uploadFileDto.type.charAt(0).toUpperCase() + uploadFileDto.type.slice(1).toLowerCase()
+						value: uploadFileDto.type.charAt(0).toUpperCase() + uploadFileDto.type.slice(1).toLowerCase(),
 					},
 					{
-						trait_type: "File Type",
-						value: file.mimetype
+						trait_type: 'File Type',
+						value: file.mimetype,
 					},
 					{
-						trait_type: "File Size",
+						trait_type: 'File Size',
 						value: file.size,
-						display_type: "number"
+						display_type: 'number',
 					},
 					{
-						trait_type: "Original Creator",
-						value: uploadFileDto.createdBy
+						trait_type: 'Original Creator',
+						value: uploadFileDto.createdBy,
 					},
 					{
-						trait_type: "Created On",
+						trait_type: 'Created On',
 						// Unix timestamp in seconds
 						value: Math.round(new Date().getTime() / 1000),
-						display_type: "date"
-					}
+						display_type: 'date',
+					},
 				],
 				// TODO: Follow schema.org - https://schema.org/MusicRecording
 				properties: {
 					audio: [
 						{
 							uri: `ipfs://${audioPinata.IpfsHash}`,
-							type: file.mimetype
-						}
-					]
-				}
+							type: file.mimetype,
+						},
+					],
+				},
 			}
-			const metadataFile = new File(
-				[JSON.stringify(metadata, null, 2)],
-				`${uploadFileDto.name}-metadata.json`,
-				{ type: 'application/json' }
-			)
+			const metadataFile = new File([JSON.stringify(metadata, null, 2)], `${uploadFileDto.name}-metadata.json`, {
+				type: 'application/json',
+			})
 			const metadataPinata = await this.pinata.upload.file(metadataFile, {
 				groupId: this.groupId,
 			})
@@ -126,7 +124,9 @@ export class PinataService {
 			if (error instanceof Error) {
 				throw new BadRequestException(error.message)
 			}
-			throw new BadRequestException('An error occurred while uploading audio and metadata files to Pinata or creating a stem entity')
+			throw new BadRequestException(
+				'An error occurred while uploading audio and metadata files to Pinata or creating a stem entity',
+			)
 		}
 	}
 }
