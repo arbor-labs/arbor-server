@@ -32,7 +32,7 @@ export class ProjectService {
 			.leftJoinAndSelect('project.stems', 'stems')
 			.leftJoinAndSelect('stems.createdBy', 'stemCreator')
 			.leftJoinAndSelect('project.queue', 'queue')
-		// .leftJoinAndSelect("project.queue.stems", "queue.stems")
+			.leftJoinAndSelect('queue.stems', 'queueStems')
 
 		// Apply sorting
 		if (sort) SortingService.applySorting(sort, qb)
