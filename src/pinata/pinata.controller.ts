@@ -1,8 +1,10 @@
 import {
 	Body,
 	Controller,
+	Get,
 	HttpStatus,
 	Inject,
+	Param,
 	ParseFilePipeBuilder,
 	Post,
 	UploadedFile,
@@ -19,6 +21,11 @@ import { PinataService } from './pinata.service'
 @Controller('pinata')
 export class PinataController {
 	constructor(@Inject() private readonly pinataService: PinataService) {}
+
+	@Get('file/:cid')
+	async getFile(@Param('cid') cid: string) {
+		return this.pinataService.getFile(cid)
+	}
 
 	@Post('upload')
 	@UseInterceptors(FileInterceptor('file'))
