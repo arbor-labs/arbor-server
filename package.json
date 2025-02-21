@@ -27,7 +27,7 @@
 		"db:down": "sh scripts/db.sh down",
 		"db:clear": "sh scripts/db.sh clear",
 		"db:drop": "sh scripts/db.sh drop",
-		"db:migrate": "pnpm build && typeorm migration:run -d ./dist/db/migration_config/datasource.js",
+		"db:migrate": "typeorm migration:run -d ./dist/db/migration_config/datasource.js",
 		"db:migrate:revert": "typeorm migration:revert -d ./dist/db/migration_config/datasource.js",
 		"db:migrate:generate": "sh scripts/generate.sh"
 	},
