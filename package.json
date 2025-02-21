@@ -22,7 +22,14 @@
 		"test:watch": "jest --watch",
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-		"test:e2e": "jest --config ./test/jest-e2e.json"
+		"test:e2e": "jest --config ./test/jest-e2e.json",
+		"db:up": "sh scripts/db.sh up",
+		"db:down": "sh scripts/db.sh down",
+		"db:clear": "sh scripts/db.sh clear",
+		"db:drop": "sh scripts/db.sh drop",
+		"db:migrate": "pnpm build && typeorm migration:run -d ./dist/db/migration_config/datasource.js",
+		"db:migrate:revert": "typeorm migration:revert -d ./dist/db/migration_config/datasource.js",
+		"db:migrate:generate": "sh scripts/generate.sh"
 	},
 	"dependencies": {
 		"@apollo/server": "^4.11.3",
