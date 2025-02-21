@@ -2,8 +2,9 @@ import path from 'path'
 import { DataSource, type DataSourceOptions } from 'typeorm'
 
 // Get the database url
-const databaseUrl =
-  process.env['DB_URL'] ?? 'postgresql://postgres:postgres@localhost:5432/arbor'
+const databaseUrl = process.env['DB_URL'] ?? 'postgresql://postgres:postgres@localhost:5432/arbor'
+
+console.log('Connecting to database:', databaseUrl)
 
 // Set up the TypeORM data source options
 export const typeormOptions: DataSourceOptions = {
