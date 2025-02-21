@@ -47,8 +47,7 @@ import { StemModule } from './stem/stem.module'
 				url: configService.get('DB_URL') ?? 'MISSING_DB_URL',
 				entities: Object.values(entities),
 				migrations: [join(process.cwd(), 'db/migrations/*.js')],
-				// TODO: figure out migrations for production
-				synchronize: true, // process.env.NODE_ENV !== 'production',
+				synchronize: process.env.NODE_ENV !== 'production',
 				logging: true,
 			}),
 			inject: [ConfigService],
