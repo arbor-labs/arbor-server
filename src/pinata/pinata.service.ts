@@ -217,9 +217,7 @@ export class PinataService {
 			if (error instanceof Error) {
 				throw new BadRequestException(error.message)
 			}
-			throw new BadRequestException(
-				'An error occurred while uploading revision audio and metadata files to Pinata',
-			)
+			throw new BadRequestException('An error occurred while uploading revision audio and metadata files to Pinata')
 		}
 	}
 }

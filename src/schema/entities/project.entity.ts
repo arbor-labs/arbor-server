@@ -50,7 +50,7 @@ export class ProjectEntity extends BaseEntity<ProjectEntity> {
 	@JoinColumn()
 	queue: ProjectQueueEntity
 
-	@OneToMany(() => ProjectRevisionEntity, revision => revision.project )
+	@OneToMany(() => ProjectRevisionEntity, revision => revision.project)
 	revisions: ProjectRevisionEntity[]
 
 	@ManyToMany(() => StemEntity, stem => stem.projectsAddedTo)
