@@ -5,7 +5,7 @@ import { QueuedStemEntity } from './queued-stem.entity'
 
 @Entity('project_queues')
 export class ProjectQueueEntity extends BaseEntity<ProjectQueueEntity> {
-	@JoinColumn()
 	@OneToMany(() => QueuedStemEntity, stem => stem.queue)
+	@JoinColumn()
 	stems: QueuedStemEntity[]
 }

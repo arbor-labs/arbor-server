@@ -1,18 +1,29 @@
-import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, Unique } from 'typeorm'
+import {
+	Column,
+	Entity,
+	Index,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	OneToMany,
+	OneToOne,
+	Unique,
+} from 'typeorm'
 
 import type { IPaginatedType } from '@/common/types'
 
 import { AccountEntity } from './account.entity'
 import { BaseEntity } from './base.entity'
 import { ProjectQueueEntity } from './project-queue.entity'
+import { ProjectRevisionEntity } from './project-revision.entity'
 import { StemEntity } from './stem.entity'
 import { VotingGroupEntity } from './voting-group.entity'
-
 @Entity('projects')
 @Unique('UniqueProjectName', ['name'])
 export class ProjectEntity extends BaseEntity<ProjectEntity> {
 	@Column({ length: 50 })
-	@Index({ unique: true })
+	@Index()
 	name: string
 
 	@Column({ length: 300 })
@@ -35,13 +46,16 @@ export class ProjectEntity extends BaseEntity<ProjectEntity> {
 	@JoinTable({ name: 'project_collaborators' })
 	collaborators: AccountEntity[]
 
-	@ManyToMany(() => StemEntity, stem => stem.projectsAddedTo)
-	@JoinTable({ name: 'project_stems' })
-	stems: StemEntity[]
-
 	@OneToOne(() => ProjectQueueEntity, { cascade: true })
 	@JoinColumn()
 	queue: ProjectQueueEntity
+
+	@OneToMany(() => ProjectRevisionEntity, revision => revision.project )
+	revisions: ProjectRevisionEntity[]
+
+	@ManyToMany(() => StemEntity, stem => stem.projectsAddedTo)
+	@JoinTable({ name: 'project_stems' })
+	stems: StemEntity[]
 
 	@OneToOne(() => VotingGroupEntity, { cascade: true })
 	@JoinColumn()

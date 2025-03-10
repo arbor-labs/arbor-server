@@ -1,0 +1,9 @@
+---
+description: always write updates to server code in the framework of nestjs with a graphql server as well as REST, typescript, typeorm, and postgres, using best practices both scalable and production ready
+globs: 
+---
+
+# Your rule content
+
+- You can @ files here
+- You can use markdown but dont have to

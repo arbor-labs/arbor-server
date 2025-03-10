@@ -20,7 +20,7 @@ import { PinataService } from './pinata.service'
 
 @Controller('pinata')
 export class PinataController {
-	constructor(@Inject() private readonly pinataService: PinataService) {}
+	constructor(@Inject(PinataService) private readonly pinataService: PinataService) {}
 
 	@Get('file/:cid')
 	async getFile(@Param('cid') cid: string) {
@@ -46,6 +46,11 @@ export class PinataController {
 		file: Express.Multer.File,
 	) {
 		try {
+			// 1. Preview what the file looks like layered with the previous stems revision
+			// 2. If confirmed, upload file to Pinata
+			// 3. Create a new stem for the project
+			// 4. Create a new revision using the layered audio
+			// 5. Return the stem and revision
 			return this.pinataService.uploadFile(body, file)
 		} catch (error) {
 			return {

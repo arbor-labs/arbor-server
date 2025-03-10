@@ -8,10 +8,10 @@ import { AccountEntity } from './account.entity'
 import { BaseEntity } from './base.entity'
 
 @Entity('stems')
-@Unique('UniqueStemName', ['name', 'filename'])
+@Unique('UniqueStem', ['name', 'filename', 'filesize', 'audioCID'])
 export class StemEntity extends BaseEntity<StemEntity> {
 	@Column({ length: 50 })
-	@Index({ unique: true })
+	@Index()
 	name: string
 
 	// @Column({ length: 200 })
@@ -30,6 +30,7 @@ export class StemEntity extends BaseEntity<StemEntity> {
 	metadataCID: string
 
 	@Column()
+	@Index()
 	audioCID: string
 
 	@Column()
