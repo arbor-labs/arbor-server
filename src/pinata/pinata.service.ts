@@ -10,7 +10,7 @@ export class PinataService {
 	private readonly logger = new Logger(PinataService.name)
 	private pinata: PinataSDK
 	// private gatewayUrl = 'https://amber-pleased-sloth-337.mypinata.cloud/ipfs/'
-	private groupId = '07cc4fed-2485-4d27-a93e-c0694f6e9c75'
+	private groupId = process.env.PINATA_GROUP_ID
 	private imageCID = 'bafybeigi3rmjs2cyz7fc6ovojyahg3svpn3hgdeucamhdrhyrilgmit4we'
 
 	constructor() {
