@@ -18,10 +18,10 @@ export class ProjectRevisionEntity extends BaseEntity<ProjectRevisionEntity> {
 	@Column({ name: 'stem_cids', type: 'simple-array' })
 	stemCIDs: string[]
 
-	@Column()
+	@Column({ name: 'audio_cid' })
 	@Index()
 	audioCID: string
 
-	@Column()
+	@Column({ name: 'metadata_cid' })
 	metadataCID: string
 }

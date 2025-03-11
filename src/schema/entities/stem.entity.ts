@@ -26,10 +26,10 @@ export class StemEntity extends BaseEntity<StemEntity> {
 	@Column()
 	type: EStemType
 
-	@Column()
+	@Column({ name: 'metadata_cid' })
 	metadataCID: string
 
-	@Column()
+	@Column({ name: 'audio_cid' })
 	@Index()
 	audioCID: string
 
