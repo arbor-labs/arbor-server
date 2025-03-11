@@ -75,23 +75,8 @@ export class ProjectController {
 				}),
 		)
 		stemFile: Express.Multer.File,
-		// @UploadedFile(
-		// 	new ParseFilePipeBuilder()
-		// 		.addFileTypeValidator({
-		// 			fileType: 'audio/wav'
-		// 		})
-		// 		.addMaxSizeValidator({
-		// 			maxSize: MAX_UPLOAD_FILE_SIZE,
-		// 		})
-		// 		.build({
-		// 			errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-		// 		}),
-		// )
-		// revisionFile: Express.Multer.File,
 	) {
-		console.log({ dto, stemFile })
 		const project = await this.projectService.addStem(projectId, dto, stemFile)
-		// const projectRevision = await this.projectService.addRevisionToProject(projectId, [revisionFile.audioCID])
 		return project
 	}
 }

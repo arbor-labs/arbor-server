@@ -1,11 +1,13 @@
 import { existsSync } from 'node:fs'
 import { mkdir, readFile, rename, unlink, writeFile } from 'node:fs/promises'
+import path from 'node:path'
 
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import _omit from 'lodash/omit'
 import { join } from 'path'
 import { Repository } from 'typeorm'
+import type { Address } from 'viem'
 
 import { AccountService } from '@/account/account.service'
 import type { FileToMerge } from '@/audio/audio.service'
@@ -14,6 +16,7 @@ import type { SortInput } from '@/common/dtos/sort.input'
 import { PaginationService } from '@/common/pagination.service'
 import { SortingService } from '@/common/sorting.service'
 import type { UploadFileDto } from '@/pinata/dto/upload-file.dto'
+import type { UploadRevisionFileDto } from '@/pinata/dto/upload-revision-file.dto'
 import { PinataService } from '@/pinata/pinata.service'
 import type { PaginatedProjects } from '@/schema/entities'
 import { ProjectEntity, ProjectQueueEntity, ProjectRevisionEntity, VotingGroupEntity } from '@/schema/entities'
@@ -24,9 +27,6 @@ import { sanitizeFilename } from '@/utils/sanitizeFilename'
 
 import type { CreateProjectInput } from './dto/create-project.input'
 import { ProjectRevisionService } from './project-revision.service'
-import { Address } from 'viem'
-import path from 'node:path'
-import { UploadRevisionFileDto } from '@/pinata/dto/upload-revision-file.dto'
 
 @Injectable()
 export class ProjectService {
@@ -209,10 +209,10 @@ export class ProjectService {
 				this.logger.log(`Adding on to existing revision ${latestRevision.id}`)
 
 				// Get the binaries latest revision audio and new audio
-				const revision = await this.pinataService.getFile(latestRevision.audioCID)
+				const revisionPinataFile = await this.pinataService.getFile(latestRevision.audioCID)
 				const existingFile: FileToMerge = {
-					buffer: AudioService.toBuffer(revision.data),
-					filename: revision.cid,
+					buffer: AudioService.toBuffer(revisionPinataFile.data),
+					filename: revisionPinataFile.cid,
 				}
 				const newFile: FileToMerge = {
 					buffer: AudioService.toBuffer(await AudioService.toBinaryFromFile(file)),
@@ -220,10 +220,9 @@ export class ProjectService {
 				}
 
 				// Merge the files
-				const filename = `${newFile.filename}-revision-${latestRevision.version + 1}.wav`
 				previewAudio = await this.audioService.mergeFiles([existingFile, newFile], {
 					outputDir,
-					outputFilename: filename,
+					outputFilename: `preview-${latestRevision.version + 1}.wav`,
 				})
 			}
 
@@ -245,9 +244,11 @@ export class ProjectService {
 	 */
 	async addRevisionToProject(project: ProjectEntity, createdBy: Address) {
 		const newRevisionNumber = project.revisions.length + 1
-		this.logger.log({ newRevisionNumber })
-		this.logger.log({ revisions: project.revisions })
+		const previewDir = path.join(process.cwd(), '/previews/', project.id)
+		const previewPath = path.join(previewDir, `preview-${newRevisionNumber}.wav`)
 		const revisionName = `${project.name} - Revision ${newRevisionNumber}`
+		const revisionFilename = `revision-${newRevisionNumber}.wav`
+		const revisionPath = path.join(previewDir, revisionFilename)
 
 		try {
 			this.logger.log(`Adding revision to project: ${project.id}`)
@@ -255,19 +256,15 @@ export class ProjectService {
 
 			// TODO: Move the following into the revision service
 			// TODO: Have a more foolproof way to increment revision numbers
+
 			// Get the preview file, convert it to a "revision"
-			const previewDir = path.join(process.cwd(), '/previews/', project.id)
-			const previewPath = path.join(previewDir, `preview-${newRevisionNumber}.wav`)
 			this.logger.log(`Checking for preview file at: ${previewPath}`)
-			const previewFile = await readFile(previewPath)
-			if (!previewFile) {
+			if (!existsSync(previewPath)) {
 				this.logger.error('No preview file found for project')
 				throw new BadRequestException('No preview file found for project')
 			}
 
 			// Rename it to revision-[n].wav
-			const revisionFilename = `revision-${newRevisionNumber}.wav`
-			const revisionPath = path.join(previewDir, revisionFilename)
 			this.logger.log(`Preview file found. Renaming it to ${revisionPath}`)
 			await rename(previewPath, revisionPath)
 
@@ -280,10 +277,8 @@ export class ProjectService {
 				projectId: project.id,
 				stemCIDs: project.stems.map(stem => stem.metadataCID),
 			}
-			const resp = await this.pinataService.uploadRevisionFile(
-				uploadDto,
-				new File([previewFile], revisionFilename, { type: 'audio/wav' }) as unknown as Express.Multer.File,
-			)
+			const revisionFileBinary = await readFile(revisionPath, 'binary')
+			const resp = await this.pinataService.uploadRevisionFile(uploadDto, revisionFileBinary)
 			if (!resp) throw new BadRequestException('An error occurred while uploading revision file to Pinata')
 
 			// 3. Create new revision entity
@@ -306,8 +301,7 @@ export class ProjectService {
 			throw new BadRequestException(error instanceof Error ? error.message : 'Error adding revision to project')
 		} finally {
 			// Clean up the revision file
-			// const revisionPath = path.join(process.cwd(), '/previews/', project.id, `revision-${newRevisionNumber}.wav`)
-			// if (existsSync(revisionPath)) await unlink(revisionPath)
+			if (existsSync(revisionPath)) await unlink(revisionPath)
 		}
 	}
 
@@ -335,11 +329,7 @@ export class ProjectService {
 
 			// Validation - ensure the audio can only be used once per project
 			const existingStem = project.stems.find(stem => stem.audioCID === audioPinata.IpfsHash)
-			if (
-				existingStem ||
-				// || project.revisions.find(revision => revision.audioCID === audioPinata.IpfsHash)
-				(audioPinata.isDuplicate && existingStem)
-			) {
+			if (audioPinata.isDuplicate && existingStem) {
 				throw new BadRequestException('Audio already exists in project')
 			}
 

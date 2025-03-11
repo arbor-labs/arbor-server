@@ -3,7 +3,7 @@ import type { GetCIDResponse, PinResponse } from 'pinata-web3'
 import { PinataSDK } from 'pinata-web3'
 
 import type { UploadFileDto } from './dto/upload-file.dto'
-import { UploadRevisionFileDto } from './dto/upload-revision-file.dto'
+import type { UploadRevisionFileDto } from './dto/upload-revision-file.dto'
 
 @Injectable()
 export class PinataService {
@@ -45,7 +45,7 @@ export class PinataService {
 				cid,
 			}
 		} catch (error) {
-			this.logger.error(`Error fetching file from Pinata: ${error}`)
+			this.logger.error(error)
 			throw new BadRequestException('Error fetching file from Pinata, CID may not exist')
 		}
 	}
@@ -136,12 +136,12 @@ export class PinataService {
 
 	async uploadRevisionFile(
 		dto: UploadRevisionFileDto,
-		file: Express.Multer.File,
+		audioBinary: string,
 	): Promise<{ audioPinata: PinResponse; metadataPinata: PinResponse } | undefined> {
 		try {
 			this.logger.log(`Uploading revision audio file to Pinata: ${dto.name}`)
 			// 1. Upload audio file to Pinata
-			const nativeFile = new File([file.buffer], dto.name, { type: file.mimetype })
+			const nativeFile = new File([Buffer.from(audioBinary, 'binary')], dto.name, { type: 'audio/wav' })
 			const audioPinata = await this.pinata.upload.file(nativeFile, {
 				groupId: this.groupId,
 			})
@@ -154,7 +154,8 @@ export class PinataService {
 					name: dto.name,
 					// TODO: support description field input for both entity and metadata
 					// description: `${uploadFileDto.name} - ${uploadFileDto.type} stem`,
-					description: 'An audio file uploaded through the Arbor Audio platform',
+					description:
+						'An Arbor Audio Project Revision file uploaded through the Arbor platform. This ia a composition of multiple stems also uploaded through Arbor.',
 					image: `ipfs://${this.imageCID}`,
 					external_url: 'https://arbor.audio/stems', // TODO: add stem ID to external URL
 					attributes: [
@@ -169,11 +170,11 @@ export class PinataService {
 						},
 						{
 							trait_type: 'File Type',
-							value: file.mimetype,
+							value: 'audio/wav',
 						},
 						{
 							trait_type: 'File Size',
-							value: file.size,
+							value: audioBinary.length,
 							display_type: 'number',
 						},
 						{
@@ -191,7 +192,7 @@ export class PinataService {
 						audio: [
 							{
 								uri: `ipfs://${audioPinata.IpfsHash}`,
-								type: file.mimetype,
+								type: 'audio/wav',
 							},
 						],
 						// NOTE: This points to metadata. Should it point to the audio files instead?

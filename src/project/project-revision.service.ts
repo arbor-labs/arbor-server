@@ -26,18 +26,16 @@ export class ProjectRevisionService {
 
 	/**
 	 * Get the latest revision for a project
+	 * // TODO: look into seeing if just loading it from the "previews/[projectId]/revision-[n].wav" is better
 	 * @param projectId - The ID of the project
 	 * @returns The latest revision for the project
 	 */
 	async getLatestRevision(projectId: string): Promise<ProjectRevisionEntity | null> {
 		const revisions = await this.getProjectRevisions(projectId)
 		// Check that the version number matches the number of revisions
-		const latestRevision = revisions?.[0] ?? null
-		this.logger.log({ latestRevision, revisions, numRevisions: revisions?.length })
-		if (latestRevision && latestRevision.version !== revisions?.length) {
-			return null
-		}
-		return latestRevision
+		const latestRevision =
+			revisions && revisions.length > 0 ? revisions.find(r => r.version === revisions.length) : null
+		return latestRevision ?? null
 	}
 
 	// async createRevision(project: ProjectEntity, newStem: StemEntity): Promise<ProjectRevisionEntity> {

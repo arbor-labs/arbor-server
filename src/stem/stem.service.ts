@@ -27,13 +27,10 @@ export class StemService {
 			.createQueryBuilder('stem')
 			.leftJoinAndSelect('stem.createdBy', 'createdBy')
 			.leftJoinAndSelect('stem.projectsAddedTo', 'projectsAddedTo')
-
 		// Apply sorting
 		if (sort) SortingService.applySorting(sort, qb)
-
 		// Apply pagination
 		const paginatedItems = await PaginationService.getPaginatedItems({ classRef: StemEntity, qb })
-
 		return paginatedItems
 	}
 
@@ -42,35 +39,32 @@ export class StemService {
 			where: { id },
 			relations: ['createdBy', 'projectsAddedTo'],
 		})
-
-		if (!stem) {
-			throw new NotFoundException(`Stem with id ${id} not found`)
-		}
-
+		if (!stem) throw new NotFoundException(`Stem with id ${id} not found`)
 		return stem
+	}
+
+	async findStemByAudioCID(audioCID: string): Promise<StemEntity | null> {
+		return await this.stemRepository.findOne({ where: { audioCID } })
+	}
+
+	async findStemByMetadataCID(metadataCID: string): Promise<StemEntity | null> {
+		return await this.stemRepository.findOne({ where: { metadataCID } })
 	}
 
 	// TODO: Create a stem without adding it to a project
 	// Always post-saving it to IPFS
 
 	async create(dto: CreateStemDto, project?: ProjectEntity): Promise<StemEntity> {
-		// Get the account record
+		// 1. Validate
 		const account = await this.accountService.findAccountByAddress(dto.createdBy)
-		if (!account) {
-			throw new NotFoundException(`Account with address ${dto.createdBy} not found`)
-		}
-
-		// Create the stem entity with relationships
+		// 2. Create
 		const stem = this.stemRepository.create({
 			...dto,
 			createdBy: account,
 			projectsAddedTo: project ? [project] : [],
 		})
-
-		// Save the stem first to get the ID, createdAt, updatedAt fields
+		// 3. Save
 		const savedStem = await this.save(stem)
-
-		// Return the new stem entity
 		return savedStem
 	}
 }

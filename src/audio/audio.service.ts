@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { mkdir, readFile, rmdir, unlink, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rm, unlink, writeFile } from 'node:fs/promises'
 
 import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
 import { BadRequestException, Injectable, Logger } from '@nestjs/common'
@@ -121,8 +121,8 @@ export class AudioService {
 			this.logger.error('Error merging audio files:', error)
 			throw new BadRequestException(error instanceof Error ? error.message : 'Error merging audio files')
 		} finally {
-			// TODO: Clean up temporary files
-			await rmdir(tempDir, { recursive: true })
+			// Clean up temporary files
+			if (existsSync(tempDir)) await rm(tempDir, { recursive: true })
 			this.logger.log(`Cleaned up temporary files in ${tempDir}`)
 		}
 	}
