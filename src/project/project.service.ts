@@ -143,6 +143,8 @@ export class ProjectService {
 	// Naive - getting the latest is just the most recent. All previews build on top of the last one.
 	// TODO: Future - implement where a preview is that of a variety of existing stems/CIDs plus an optional new audio file. This allows for previewing a combination of existing ones in any order as well as adding a new one to the mix. i.e. A user can choose which stems to create a preview of - useful for forking projects.
 	// TODO: This could have issues with race conditions on concurrent users. Hardcoding filenames is not good, maybe include address in temp filenames
+	// TODO: Instead of writing to the local disk with temp files, store them in Redis for caching and later reuse. This way it can optimize for not having to query Pinata for each merge or each new audio file request.
+	// TODO: On any given request, check Redis for the file. If it's not there, download it from Pinata and save it to Redis. Then return the file from Redis.
 	async previewNewAudio(
 		projectId: string,
 		file: Express.Multer.File,
@@ -242,6 +244,8 @@ export class ProjectService {
 	 * @param newStem - The new stem that has been added to the project
 	 * @returns The updated project
 	 */
+	// TODO: Instead of writing to the local disk with temp files, store them in Redis for caching and later reuse. This way it can optimize for not having to query Pinata for each merge or each new audio file request.
+	// TODO: On any given request, check Redis for the file. If it's not there, download it from Pinata and save it to Redis. Then return the file from Redis.
 	async addRevisionToProject(project: ProjectEntity, createdBy: Address) {
 		const newRevisionNumber = project.revisions.length + 1
 		const previewDir = path.join(process.cwd(), '/previews/', project.id)

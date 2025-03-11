@@ -4,6 +4,7 @@ import { PinataSDK } from 'pinata-web3'
 
 import type { UploadFileDto } from './dto/upload-file.dto'
 import type { UploadRevisionFileDto } from './dto/upload-revision-file.dto'
+import { RedisCacheService } from '@/cache/redis-cache.service'
 
 @Injectable()
 export class PinataService {
@@ -13,7 +14,7 @@ export class PinataService {
 	private groupId = process.env.PINATA_GROUP_ID
 	private imageCID = 'bafybeigi3rmjs2cyz7fc6ovojyahg3svpn3hgdeucamhdrhyrilgmit4we'
 
-	constructor() {
+	constructor(private readonly cacheService: RedisCacheService) {
 		this.pinata = new PinataSDK({
 			pinataJwt: process.env.PINATA_JWT,
 			pinataGateway: process.env.PINATA_GATEWAY_URL,
@@ -22,28 +23,33 @@ export class PinataService {
 
 	async getFile(cid: string): Promise<{ contentType: GetCIDResponse['contentType']; data: string; cid: string }> {
 		try {
-			this.logger.log(`Downloading file with CID: ${cid}`)
-			const response = await this.pinata.gateways.get(cid)
-			let data = response.data
+			// Try to get from cache first
+			const cacheKey = `pinata:file:${cid}`
 
-			// Convert Blob to raw binary before returning
-			if (data instanceof Blob) {
-				const buffer = await data.arrayBuffer()
-				const rawAudioBinary = Buffer.from(buffer).toString('binary')
-				data = rawAudioBinary
-			}
-			// Always ensure a string of binary data is returned regardless of what response.data is
-			if (typeof data !== 'string') {
-				data = Buffer.from(JSON.stringify(data)).toString('binary')
-			}
+			return await this.cacheService.getOrSet(cacheKey, async () => {
+				this.logger.log(`Downloading file with CID: ${cid}`)
+				const response = await this.pinata.gateways.get(cid)
+				let data = response.data
 
-			this.logger.log(`File downloaded with CID: ${cid}`)
+				// Convert Blob to raw binary before returning
+				if (data instanceof Blob) {
+					const buffer = await data.arrayBuffer()
+					const rawAudioBinary = Buffer.from(buffer).toString('binary')
+					data = rawAudioBinary
+				}
+				// Always ensure a string of binary data is returned
+				if (typeof data !== 'string') {
+					data = Buffer.from(JSON.stringify(data)).toString('binary')
+				}
 
-			return {
-				data: String(data),
-				contentType: response.contentType,
-				cid,
-			}
+				this.logger.log(`File downloaded with CID: ${cid}`)
+
+				return {
+					data: String(data),
+					contentType: response.contentType,
+					cid,
+				}
+			})
 		} catch (error) {
 			this.logger.error(error)
 			throw new BadRequestException('Error fetching file from Pinata, CID may not exist')

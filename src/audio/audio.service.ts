@@ -8,6 +8,7 @@ import { join } from 'path'
 import type { GetCIDResponse } from 'pinata-web3'
 
 import { sanitizeFilename } from '@/utils/sanitizeFilename'
+import { RedisCacheService } from '@/cache/redis-cache.service'
 
 type PinataResponseData = GetCIDResponse['data']
 
@@ -25,7 +26,7 @@ export interface FileToMerge {
 export class AudioService {
 	private readonly logger = new Logger(AudioService.name)
 
-	constructor() {
+	constructor(private readonly cacheService: RedisCacheService) {
 		ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 	}
 
@@ -56,10 +57,23 @@ export class AudioService {
 		outputData: Buffer
 		outputPath: string
 	}> {
-		const tempDir = join(outputDir, 'temp')
-		const tempFiles: string[] = []
+		// Generate a cache key based on the files to merge
+		const cacheKey = `merged:${files.map(f => f.filename).join('-')}`
 
 		try {
+			// Check cache first
+			const cachedBuffer = await this.cacheService.getBinary(cacheKey)
+			if (cachedBuffer) {
+				this.logger.log('Found merged audio in cache')
+				return {
+					outputData: cachedBuffer,
+					outputPath: join(outputDir, outputFilename),
+				}
+			}
+
+			const tempDir = join(outputDir, 'temp')
+			const tempFiles: string[] = []
+
 			// Create directories if they don't exist
 			if (!existsSync(tempDir)) await mkdir(tempDir, { recursive: true })
 
@@ -112,6 +126,9 @@ export class AudioService {
 			// Read the merged file
 			this.logger.log(`Reading merged file at ${outputPath}`)
 			const mergedBuffer = await readFile(outputPath)
+
+			// After successful merge, cache the result
+			await this.cacheService.setBinary(cacheKey, mergedBuffer)
 
 			return {
 				outputData: mergedBuffer,
@@ -180,89 +197,6 @@ export class AudioService {
 	// 	return {
 	// 		data: mergedBuffer,
 	// 		previewPath: outputPath,
-	// 	}
-	// }
-
-	// async mergeFilesFromCIDs(
-	// 	cids: string[],
-	// 	projectName: string,
-	// 	{outputPath}: MergeFilesOptions,
-	// ): Promise<{
-	// 	data: Buffer
-	// 	previewPath: string
-	// }> {
-	// 	// const dir = join(process.cwd(), '/previews/', projectName, 'revisions')
-	// 	// const filename = `output-${[cids.join('-').trim()].join('-')}.wav`
-	// 	// const tempFiles: string[] = []
-	// 	// const outputPath = join(dir, filename)
-
-	// 	try {
-	// 		// Create directory if it doesn't exist
-	// 		await fs.mkdir(dir, { recursive: true })
-
-	// 		this.logger.log(`Starting to fetch and merge ${cids.length} audio files`)
-
-	// 		// 1. Download and save all files temporarily
-	// 		for (const cid of cids) {
-	// 			const response = await this.pinataService.getFile(cid)
-
-	// 			// Convert binary string back to Buffer if necessary
-	// 			const audioBuffer = AudioService.toBuffer(response.data)
-
-	// 			// Write to temp file
-	// 			const tempPath = join(dir, `temp-${cid}.wav`)
-	// 			await fs.writeFile(tempPath, audioBuffer)
-	// 			tempFiles.push(tempPath)
-	// 			this.logger.log(`Saved temporary file at ${tempPath}`)
-	// 		}
-
-	// 		// 3. Merge files using ffmpeg
-	// 		this.logger.log(`Merging ${tempFiles.length} audio files`)
-	// 		await new Promise<void>((resolve, reject) => {
-	// 			const command = ffmpeg()
-
-	// 			// Add all input files
-	// 			tempFiles.forEach(file => {
-	// 				command.input(file)
-	// 			})
-
-	// 			command
-	// 				.complexFilter([
-	// 					{
-	// 						filter: 'amix',
-	// 						options: {
-	// 							inputs: tempFiles.length,
-	// 							duration: 'longest',
-	// 							normalize: 1, // Normalize audio levels
-	// 						},
-	// 					},
-	// 				])
-	// 				.toFormat('wav')
-	// 				.on('start', commandLine => {
-	// 					this.logger.log(`FFmpeg command: ${commandLine}`)
-	// 				})
-	// 				.on('error', err => {
-	// 					this.logger.error('FFmpeg error:', err)
-	// 					reject(err)
-	// 				})
-	// 				.on('end', () => {
-	// 					this.logger.log('FFmpeg processing finished')
-	// 					resolve()
-	// 				})
-	// 				.save(outputPath)
-	// 		})
-
-	// 		// 4. Read the merged file
-	// 		this.logger.log(`Reading merged file at ${outputPath}`)
-	// 		const mergedBuffer = await fs.readFile(outputPath)
-
-	// 		return {
-	// 			data: mergedBuffer,
-	// 			previewPath: outputPath,
-	// 		}
-	// 	} catch (error) {
-	// 		this.logger.error('Error merging audio files:', error)
-	// 		throw new BadRequestException(error instanceof Error ? error.message : 'Error merging audio files')
 	// 	}
 	// }
 }

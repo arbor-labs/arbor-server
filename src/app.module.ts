@@ -10,6 +10,7 @@ import { join } from 'path'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 import { AccountModule } from './account/account.module'
+import { RedisCacheModule } from './cache/redis-cache.module'
 import { LoggerModule } from './logger/logger.module'
 import { ProjectModule } from './project/project.module'
 import * as entities from './schema/entities'
@@ -24,8 +25,14 @@ import { StemModule } from './stem/stem.module'
 			validationSchema: Joi.object({
 				DB_URL: Joi.string().required(),
 				PORT: Joi.number().required(),
+				REDIS_HOST: Joi.string().required(),
+				REDIS_PORT: Joi.number().default(6379),
+				REDIS_PASSWORD: Joi.string().allow('').optional(),
+				REDIS_CACHE_TTL: Joi.number().default(86400),
 			}),
 		}),
+		// Redis Cache
+		RedisCacheModule,
 		// GraphQL
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
